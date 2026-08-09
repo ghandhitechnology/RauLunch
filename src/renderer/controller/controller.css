@@ -1,0 +1,827 @@
+/*
+ * 컨트롤러 창. 스위치 홈 화면의 문법을 그대로 가져온다 —
+ * 어두운 바탕, 둥근 타일, 3px 네온 링과 아주 짧은 확대가 "지금 여기" 를 가리킨다.
+ *
+ * 루트 글자 크기를 1px 로 못 박아 둔 이유:
+ * 테마들은 1920 기준 길이를 rem/em 으로 적는데, 컨트롤러 안에서 그 값이
+ * 브라우저 기본 16px 에 걸리면 미리보기가 통째로 어긋난다. 1rem = 1 디자인 픽셀로
+ * 고정해 두고, 실제 축소는 transform 이 맡는다. 그래서 아래 규칙은 전부 px 로 적는다.
+ */
+
+:root {
+  font-size: 1px;
+
+  --ground: #2d2d2d;
+  --panel: #3a3a3a;
+  --sunk: #2f2f2f;
+  --accent: #00c3e3;
+  --accent-hi: #2ad5f2;
+  --on-accent: #08272e;
+  --fg: #ffffff;
+  --fg2: #a0a0a0;
+  --fg3: #7c7c7c;
+  --amber: #ffb84d;
+  --red: #ff6b6b;
+
+  --r: 12px;
+  --dur: 140ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--ground);
+  color: var(--fg);
+  font-family: 'Pretendard', system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  cursor: default;
+}
+
+button {
+  margin: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: default;
+  outline: none;
+}
+
+input {
+  font-family: inherit;
+  outline: none;
+}
+
+#root {
+  height: 100%;
+}
+
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--ground);
+}
+
+/* ── 창 손잡이 ─────────────────────────────────────────────── */
+
+/* OS 제목 표시줄이 아니라 앱의 일부다. 아래층과 같은 바탕에 흰 제목을 얹고,
+   앱의 강조색 3px 로 밑줄 하나만 긋는다. 창 전체를 끄는 손잡이이기도 하다. */
+.chrome {
+  flex: none;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px 0 16px;
+  background: var(--ground);
+  border-bottom: 3px solid var(--accent);
+  -webkit-app-region: drag;
+}
+
+/* macOS 신호등 버튼이 앉는 자리. 제목이 그 위로 올라오지 않게 밀어둔다. */
+.chrome[data-mac] {
+  padding-left: 82px;
+}
+
+.chrome-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+}
+
+.chrome-buttons {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+  -webkit-app-region: no-drag;
+}
+
+.chrome-btn {
+  width: 30px;
+  height: 24px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: var(--panel);
+  color: var(--fg2);
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+.chrome-btn:hover {
+  background: #4a4a4a;
+  color: var(--fg);
+}
+
+.chrome-btn:active {
+  transform: scale(0.94);
+}
+
+.chrome-btn:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent);
+  color: var(--fg);
+}
+
+.chrome-btn-close:hover {
+  background: #e5484d;
+  color: #fff;
+}
+
+/* ── 본문 ─────────────────────────────────────────────────── */
+
+.main {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 10px 18px 10px;
+  overflow: hidden;
+}
+
+/* ── 타일 두 장 ───────────────────────────────────────────── */
+
+.tiles {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.tile-slot {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.tile {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  padding: 0;
+  border-radius: var(--r);
+  background: var(--panel);
+  overflow: hidden;
+  /* 타일은 button 이다. 브라우저 기본값이 가운데 정렬이라, 테마 패널이
+     통째로 가운데로 몰린다. 여기서 되돌려 놓는다. */
+  text-align: left;
+  transition:
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.tile:hover {
+  transform: scale(1.008);
+}
+
+.tile:focus {
+  transform: scale(1.02);
+  box-shadow: 0 0 0 3px var(--accent);
+  z-index: 2;
+}
+
+.tile:active {
+  transform: scale(0.985);
+}
+
+.tile-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.mini {
+  position: relative;
+  overflow: hidden;
+}
+
+.tile-label {
+  flex: none;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 3px;
+}
+
+.tile-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.tile-meta {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--fg2);
+}
+
+/* ── 테마 띠 ──────────────────────────────────────────────── */
+
+.strip {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.strip-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 0 3px;
+  min-width: 0;
+}
+
+.strip-title {
+  flex: none;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--fg2);
+}
+
+.strip-blurb {
+  min-width: 0;
+  font-size: 11px;
+  color: var(--fg3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.strip-track {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 3px 6px;
+  scrollbar-width: none;
+}
+
+.strip-track::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  flex: 0 0 auto;
+  width: 84px;
+  padding: 0;
+  border-radius: 10px;
+  background: var(--panel);
+  transition:
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    background var(--dur) var(--ease);
+}
+
+.chip-swatch {
+  position: relative;
+  display: flex;
+  height: 30px;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+}
+
+.chip-swatch i {
+  flex: 1;
+}
+
+.chip-check {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  display: grid;
+  place-items: center;
+}
+
+.chip-name {
+  display: block;
+  height: 22px;
+  line-height: 22px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg2);
+  transition: color var(--dur) var(--ease);
+}
+
+.chip[data-selected] {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+.chip[data-selected] .chip-name {
+  color: var(--fg);
+}
+
+.chip:active {
+  transform: scale(0.97);
+}
+
+/* ── 하단 바 ──────────────────────────────────────────────── */
+
+.bar {
+  flex: none;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  background: var(--panel);
+  box-shadow: inset 0 1px 0 #ffffff12;
+}
+
+.bar-gap {
+  flex: 1;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.stepper-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg2);
+}
+
+.stepper-box {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 2px;
+  border-radius: 9px;
+  background: var(--sunk);
+  transition:
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.stepper-box:focus {
+  transform: scale(1.03);
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+.stepper-arrow {
+  width: 24px;
+  height: 28px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  color: var(--fg2);
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+.stepper-arrow:hover:not(:disabled) {
+  background: #ffffff14;
+  color: var(--fg);
+}
+
+.stepper-arrow:active:not(:disabled) {
+  transform: scale(0.9);
+}
+
+.stepper-arrow:disabled {
+  opacity: 0.25;
+}
+
+.stepper-value {
+  min-width: 38px;
+  padding: 0 2px;
+  text-align: center;
+  font-size: 12.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 9px;
+  background: var(--sunk);
+  font-size: 12.5px;
+  font-weight: 600;
+  transition:
+    background var(--dur) var(--ease),
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.btn:hover {
+  background: #474747;
+}
+
+.btn:focus {
+  transform: scale(1.03);
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn-icon {
+  width: 32px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hi);
+}
+
+/* 네온 위에 네온 링은 안 보인다. 강조 버튼만 흰 링을 쓴다. */
+.btn-primary:focus {
+  box-shadow: 0 0 0 3px var(--fg);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+}
+
+.btn[data-spin] svg {
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 2px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--fg2);
+  font-variant-numeric: tabular-nums;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #6e6e6e;
+  transition: background var(--dur) var(--ease);
+}
+
+.status[data-tone='busy'] {
+  color: var(--amber);
+}
+
+.status[data-tone='busy'] .status-dot {
+  background: var(--amber);
+}
+
+.status[data-tone='fail'] {
+  color: var(--red);
+}
+
+.status[data-tone='fail'] .status-dot {
+  background: var(--red);
+}
+
+/* ── 덮개(설정 / 미리보기) ────────────────────────────────── */
+
+.sheet {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 18px 6px;
+  background: var(--ground);
+  animation: sheet-in 160ms var(--ease) both;
+}
+
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+.sheet-head {
+  flex: none;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.sheet-title {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.sheet-head .btn-icon {
+  margin-left: auto;
+}
+
+.sheet-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px 6px 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.sheet-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sheet-body::-webkit-scrollbar-thumb {
+  background: #4e4e4e;
+  border-radius: 3px;
+}
+
+.srow {
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 9px;
+  transition: background var(--dur) var(--ease);
+}
+
+.srow:hover {
+  background: #ffffff08;
+}
+
+.srow:has(:focus) {
+  background: #ffffff12;
+}
+
+.srow-label {
+  font-size: 12.5px;
+}
+
+.srow-control {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 목록 안에서는 왼쪽 이름이 이미 라벨이다. */
+.srow .stepper-label {
+  display: none;
+}
+
+/* 하단 바에서는 컨트롤이 패널 위에 얹혀 저절로 구분되지만, 설정 목록은
+   바탕색 위에 바로 놓인다. 여기서만 한 단계 밝게 올려 윤곽을 만든다. */
+.srow .stepper-box {
+  background: #484848;
+}
+
+.toggle {
+  position: relative;
+  width: 46px;
+  height: 26px;
+  border-radius: 13px;
+  background: #4a4a4a;
+  transition:
+    background var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+.toggle[data-on] {
+  background: var(--accent);
+}
+
+.toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #8a8a8a;
+  transition:
+    transform var(--dur) var(--ease),
+    background var(--dur) var(--ease);
+}
+
+.toggle[data-on] .toggle-knob {
+  transform: translateX(20px);
+  background: var(--on-accent);
+}
+
+.toggle:focus {
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+.toggle[data-on]:focus {
+  box-shadow: 0 0 0 3px var(--fg);
+}
+
+.toggle:active {
+  transform: scale(0.97);
+}
+
+.slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slider input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 150px;
+  height: 6px;
+  border-radius: 3px;
+  background: #4a4a4a;
+  transition: box-shadow var(--dur) var(--ease);
+}
+
+.slider input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--fg);
+  transition: background var(--dur) var(--ease);
+}
+
+.slider input[type='range']:focus {
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+.slider input[type='range']:focus::-webkit-slider-thumb {
+  background: var(--accent);
+}
+
+.slider-value {
+  min-width: 34px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg2);
+  font-variant-numeric: tabular-nums;
+}
+
+.editor {
+  flex: none;
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 11px;
+  background: var(--panel);
+}
+
+.editor-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.tab {
+  height: 26px;
+  padding: 0 13px;
+  border-radius: 8px;
+  background: var(--sunk);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--fg2);
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.tab:hover {
+  background: #474747;
+}
+
+.tab[data-on] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.tab:focus {
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+.tab[data-on]:focus {
+  box-shadow: 0 0 0 3px var(--fg);
+}
+
+.tab:active {
+  transform: scale(0.97);
+}
+
+.editor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-no {
+  width: 12px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fg2);
+}
+
+.field input {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  padding: 0 9px;
+  border: none;
+  border-radius: 8px;
+  background: var(--sunk);
+  color: var(--fg);
+  font-size: 12px;
+  user-select: text;
+  cursor: text;
+  transition: box-shadow var(--dur) var(--ease);
+}
+
+.field input:focus {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* ── 전체 미리보기 ────────────────────────────────────────── */
+
+.preview-stage {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding-bottom: 6px;
+}
+
+.preview-crop {
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px #ffffff1f;
+}
+
+/* ── 움직임 줄이기 ────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .tile:focus,
+  .chip[data-selected],
+  .stepper-box:focus,
+  .btn:focus {
+    transform: none;
+  }
+}

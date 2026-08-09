@@ -1,0 +1,83 @@
+{
+  "name": "geupsik-controller",
+  "version": "0.1.0",
+  "description": "급식 컨트롤러 — 인천과학고 급식·시간표 바탕화면 컨트롤러",
+  "main": "./out/main/index.js",
+  "author": "Taewook Ha",
+  "license": "MIT",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "npm run typecheck && electron-vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "start": "electron-vite preview",
+    "pack:win": "npm run build && electron-builder --win --publish never",
+    "pack:mac": "npm run build && electron-builder --mac --publish never"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9",
+    "iconv-lite": "^0.6.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^33.3.0",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^3.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  },
+  "build": {
+    "appId": "kr.hs.icsh.geupsik.controller",
+    "productName": "급식 컨트롤러",
+    "copyright": "Copyright © 2026 Taewook Ha",
+    "directories": {
+      "output": "release",
+      "buildResources": "resources"
+    },
+    "files": [
+      "out/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/fonts",
+        "to": "fonts"
+      },
+      {
+        "from": "resources/icons",
+        "to": "icons"
+      }
+    ],
+    "win": {
+      "icon": "resources/icons/app_icon.ico",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "급식컨트롤러-설치-${version}.${ext}",
+      "shortcutName": "급식 컨트롤러"
+    },
+    "portable": {
+      "artifactName": "급식컨트롤러-포터블-${version}.${ext}"
+    },
+    "mac": {
+      "icon": "resources/icons/app_icon.icns",
+      "category": "public.app-category.utility",
+      "target": [
+        "dmg"
+      ]
+    },
+    "dmg": {
+      "artifactName": "급식컨트롤러-${version}.${ext}"
+    }
+  }
+}

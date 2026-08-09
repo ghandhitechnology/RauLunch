@@ -1,0 +1,66 @@
+/* 번들된 한글 폰트. 교실 PC 가 오프라인일 수 있어 전부 로컬 파일이다.
+   테마의 fonts 배열에 적는 이름이 여기 family 이름과 정확히 같아야 한다. */
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('../../resources/fonts/PretendardVariable.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Neodgm';
+  src: url('../../resources/fonts/neodgm.ttf') format('truetype');
+  font-weight: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'NanumPen';
+  src: url('../../resources/fonts/NanumPenScript-Regular.ttf') format('truetype');
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'NanumBrush';
+  src: url('../../resources/fonts/NanumBrushScript-Regular.ttf') format('truetype');
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'BlackHanSans';
+  src: url('../../resources/fonts/BlackHanSans-Regular.ttf') format('truetype');
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Jua';
+  src: url('../../resources/fonts/Jua-Regular.ttf') format('truetype');
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'GowunDodum';
+  src: url('../../resources/fonts/GowunDodum-Regular.ttf') format('truetype');
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'DoHyeon';
+  src: url('../../resources/fonts/DoHyeon-Regular.ttf') format('truetype');
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Gaegu';
+  src: url('../../resources/fonts/Gaegu-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Gaegu';
+  src: url('../../resources/fonts/Gaegu-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: block;
+}
