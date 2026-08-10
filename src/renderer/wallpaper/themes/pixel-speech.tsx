@@ -5,6 +5,7 @@ import type {
   ThemeSkin,
   TimetablePanelProps,
 } from '../../../shared/theme'
+import { getThemeMeta } from '../../../shared/themeCatalog'
 import { MEAL_KEYS, MEAL_LABELS } from '../../../shared/types'
 
 const BLACK = '#000000'
@@ -185,11 +186,13 @@ function TimetablePanel({ periods, weekdayLabel, empty }: TimetablePanelProps) {
   )
 }
 
+const meta = getThemeMeta('pixel-speech')
+
 const pixelSpeech: ThemeSkin = {
-  id: 'pixel-speech',
-  name: '클로드',
-  blurb: '검은 화면 위 흰 픽셀 캐릭터가 오늘의 급식과 시간표를 말한다.',
-  chip: [BLACK, WHITE, DIM],
+  id: meta.id,
+  name: meta.name,
+  blurb: meta.blurb,
+  chip: meta.chip,
   fonts: ['Neodgm'],
   tokens: { '--bg': BLACK, '--fg': WHITE, '--dim': DIM },
   geometry: {

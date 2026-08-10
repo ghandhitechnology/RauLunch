@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
+import { isThemeId } from '../../shared/themeCatalog'
 import type { AppState, Settings, ThemeId } from '../../shared/types'
 import { api, isMac } from './api'
 import { ConfigBar } from './ConfigBar'
@@ -37,9 +38,14 @@ export function App() {
     }
   }, [])
 
-  const patch = useCallback((p: Partial<Settings>) => {
+  const patch = useCallback(async (p: Partial<Settings>) => {
     setState((prev) => (prev ? { ...prev, settings: { ...prev.settings, ...p } } : prev))
-    void api.setSettings(p)
+    const next = await api.setSettings(p)
+    setState(next)
+    // main 이 테마 id 를 모를 때(옛 프로세스·정규화) 커서가 유령 선택에 남지 않게 맞춘다.
+    if (p.theme !== undefined && next.settings.theme !== p.theme) {
+      setCursor(next.settings.theme)
+    }
   }, [])
 
   const applyWallpaper = useCallback(async () => {
@@ -97,7 +103,10 @@ export function App() {
             cursorId={cursor}
             appliedId={settings.theme}
             onCursor={setCursor}
-            onApply={(id) => patch({ theme: id })}
+            onApply={(id) => {
+              if (!isThemeId(id)) return
+              patch({ theme: id })
+            }}
           />
 
           {sheet === 'settings' && (

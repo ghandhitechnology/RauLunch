@@ -38,6 +38,25 @@ function nextFrame(): Promise<void> {
   return new Promise((resolve) => requestAnimationFrame(() => resolve()))
 }
 
+/** 테마 장식 이미지가 붙기 전에 찍히면 캐릭터가 빠진다. 실패해도 캡처는 진행한다. */
+function waitForImages(): Promise<void> {
+  const images = Array.from(document.images)
+  if (images.length === 0) return Promise.resolve()
+  return Promise.all(
+    images.map(
+      (img) =>
+        new Promise<void>((resolve) => {
+          if (img.complete) {
+            resolve()
+            return
+          }
+          img.addEventListener('load', () => resolve(), { once: true })
+          img.addEventListener('error', () => resolve(), { once: true })
+        }),
+    ),
+  ).then(() => undefined)
+}
+
 const params = new URLSearchParams(window.location.search)
 const token = params.get('token')
 
@@ -83,7 +102,7 @@ createRoot(container).render(
 async function signalReady(): Promise<void> {
   await nextFrame()
   await nextFrame()
-  await document.fonts.ready
+  await Promise.all([document.fonts.ready, waitForImages()])
   await nextFrame()
   await nextFrame()
   if (token) document.title = READY_PREFIX + token

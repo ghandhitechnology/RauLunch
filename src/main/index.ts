@@ -367,6 +367,12 @@ async function applySettingsPatch(patch: Partial<Settings>): Promise<AppState> {
   const before = settings
   settings = saveSettings({ ...settings, ...patch })
 
+  // 컨트롤러가 새 테마를 먼저 알게 되고 main 이 옛 목록을 들고 있으면
+  // 여기서 조용히 기본 테마로 접힌다. 접힌 사실을 로그로 남겨 원인 추적을 쉽게 한다.
+  if (patch.theme !== undefined && patch.theme !== settings.theme) {
+    log(`알 수 없는 테마 "${String(patch.theme)}" — ${settings.theme} 으로 되돌림`)
+  }
+
   if (settings.autostart !== before.autostart) {
     try {
       await applyAutostart(settings.autostart)

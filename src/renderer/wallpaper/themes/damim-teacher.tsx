@@ -5,6 +5,7 @@ import type {
   ThemeSkin,
   TimetablePanelProps,
 } from '../../../shared/theme'
+import { getThemeMeta } from '../../../shared/themeCatalog'
 import { MEAL_KEYS, MEAL_LABELS } from '../../../shared/types'
 import teacherUrl from './assets/damim-teacher.jpg'
 
@@ -54,16 +55,17 @@ function Ground({ children }: { children: ReactNode }) {
         style={{
           ...decoration,
           position: 'absolute',
-          right: '36rem',
-          bottom: '12rem',
-          width: '300rem',
-          height: '390rem',
+          right: '8rem',
+          bottom: '-10rem',
+          width: '440rem',
+          height: '572rem',
           objectFit: 'contain',
           objectPosition: 'bottom center',
           pointerEvents: 'none',
+          zIndex: 1,
         }}
       />
-      <div style={{ position: 'absolute', inset: 0 }}>{children}</div>
+      <div style={{ position: 'absolute', inset: 0, zIndex: 2 }}>{children}</div>
     </div>
   )
 }
@@ -187,11 +189,13 @@ function TimetablePanel({ periods, weekdayLabel, empty }: TimetablePanelProps) {
   )
 }
 
+const meta = getThemeMeta('damim-teacher')
+
 const damimTeacher: ThemeSkin = {
-  id: 'damim-teacher',
-  name: '담임쌤',
-  blurb: '검은 화면 위 흰 말풍선 옆에서 담임 선생님이 오늘의 급식과 시간표를 말한다.',
-  chip: [BLACK, WHITE, DIM],
+  id: meta.id,
+  name: meta.name,
+  blurb: meta.blurb,
+  chip: meta.chip,
   fonts: ['Neodgm'],
   tokens: { '--bg': BLACK, '--fg': WHITE, '--dim': DIM },
   geometry: {
