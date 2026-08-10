@@ -1,31 +1,33 @@
 /*
- * 컨트롤러 창. 스위치 홈 화면의 문법을 그대로 가져온다 —
- * 어두운 바탕, 둥근 타일, 3px 네온 링과 아주 짧은 확대가 "지금 여기" 를 가리킨다.
+ * 컨트롤러 창 — Prototype A: Classic Switch Home (pixel chrome).
+ *
+ * 어두운 바탕, 두툼한 칩, 3px 시안 링. UI 글자는 Neodgm 으로
+ * 살짝 픽셀 느낌을 낸다. 미리보기 타일은 두지 않는다.
  *
  * 루트 글자 크기를 1px 로 못 박아 둔 이유:
- * 테마들은 1920 기준 길이를 rem/em 으로 적는데, 컨트롤러 안에서 그 값이
- * 브라우저 기본 16px 에 걸리면 미리보기가 통째로 어긋난다. 1rem = 1 디자인 픽셀로
- * 고정해 두고, 실제 축소는 transform 이 맡는다. 그래서 아래 규칙은 전부 px 로 적는다.
+ * 설정 덮개 등에서 rem 기준을 쓰는 경우가 있어도 1rem = 1 디자인 픽셀로
+ * 고정한다. 아래 규칙은 전부 px 로 적는다.
  */
 
 :root {
   font-size: 1px;
 
-  --ground: #2d2d2d;
-  --panel: #3a3a3a;
-  --sunk: #2f2f2f;
-  --accent: #00c3e3;
-  --accent-hi: #2ad5f2;
-  --on-accent: #08272e;
-  --fg: #ffffff;
-  --fg2: #a0a0a0;
-  --fg3: #7c7c7c;
+  --ground: #161616;
+  --ground-deep: #101010;
+  --panel: #222222;
+  --sunk: #1a1a1a;
+  --border: #0a0a0a;
+  --accent: #d8c9a8;
+  --accent-hi: #e8dcc4;
+  --on-accent: #1a1610;
+  --joy-red: #e60012;
+  --fg: #ececec;
+  --fg2: #9a9a9a;
+  --fg3: #6e6e6e;
   --amber: #ffb84d;
   --red: #ff6b6b;
-  --edge: #555555;
-  --pixel-shadow: #191919;
 
-  --r: 7px;
+  --r: 8px;
   --dur: 140ms;
   --ease: cubic-bezier(0.2, 0, 0, 1);
 }
@@ -44,10 +46,14 @@ body {
 body {
   background: var(--ground);
   color: var(--fg);
-  font-family: 'Pretendard', system-ui, sans-serif;
-  font-size: 13px;
-  line-height: 1.4;
-  -webkit-font-smoothing: antialiased;
+  font-family: 'Neodgm', 'Pretendard', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.35;
+  /* 픽셀 글꼴은 안티앨리어싱을 끄면 윤곽이 또렷해진다. */
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+  text-rendering: optimizeSpeed;
   user-select: none;
   cursor: default;
 }
@@ -76,45 +82,31 @@ input {
   display: flex;
   flex-direction: column;
   background: var(--ground);
+  box-shadow: inset 0 0 0 2px var(--border);
 }
 
 /* ── 창 손잡이 ─────────────────────────────────────────────── */
 
-/* OS 제목 표시줄이 아니라 앱의 일부다. 아래층과 같은 바탕에 흰 제목을 얹고,
-   앱의 강조색 3px 로 밑줄 하나만 긋는다. 창 전체를 끄는 손잡이이기도 하다. */
 .chrome {
   flex: none;
   height: 36px;
   display: flex;
   align-items: center;
   padding: 0 8px 0 16px;
-  background: var(--ground);
+  background: var(--ground-deep);
   border-bottom: 3px solid var(--accent);
   -webkit-app-region: drag;
 }
 
-/* macOS 신호등 버튼이 앉는 자리. 제목이 그 위로 올라오지 않게 밀어둔다. */
 .chrome[data-mac] {
   padding-left: 82px;
 }
 
 .chrome-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Neodgm', 'Pretendard', sans-serif;
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 400;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
   color: var(--fg);
-}
-
-.chrome-title::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  background: var(--accent);
-  box-shadow: 3px 3px 0 #08798d;
 }
 
 .chrome-buttons {
@@ -127,12 +119,12 @@ input {
 .chrome-btn {
   width: 30px;
   height: 24px;
-  border: 1px solid var(--edge);
-  border-radius: 4px;
+  border-radius: var(--r);
   display: grid;
   place-items: center;
   background: var(--panel);
   color: var(--fg2);
+  box-shadow: 0 0 0 2px var(--border);
   transition:
     background var(--dur) var(--ease),
     color var(--dur) var(--ease),
@@ -140,7 +132,7 @@ input {
 }
 
 .chrome-btn:hover {
-  background: #4a4a4a;
+  background: #333333;
   color: var(--fg);
 }
 
@@ -149,7 +141,7 @@ input {
 }
 
 .chrome-btn:focus-visible {
-  box-shadow: 0 0 0 2px var(--accent);
+  box-shadow: 0 0 0 3px var(--accent);
   color: var(--fg);
 }
 
@@ -166,132 +158,45 @@ input {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 10px 18px 10px;
+  gap: 12px;
+  padding: 18px 20px 14px;
   overflow: hidden;
-}
-
-/* ── 타일 두 장 ───────────────────────────────────────────── */
-
-.tiles {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.tile-slot {
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.tile {
-  flex: 1;
-  min-height: 0;
-  position: relative;
-  padding: 0;
-  border-radius: var(--r);
-  border: 1px solid #4b4b4b;
-  background: var(--panel);
-  box-shadow: 3px 3px 0 var(--pixel-shadow);
-  overflow: hidden;
-  /* 타일은 button 이다. 브라우저 기본값이 가운데 정렬이라, 테마 패널이
-     통째로 가운데로 몰린다. 여기서 되돌려 놓는다. */
-  text-align: left;
-  transition:
-    transform var(--dur) var(--ease),
-    box-shadow var(--dur) var(--ease);
-}
-
-.tile:hover {
-  transform: scale(1.008);
-}
-
-.tile:focus {
-  transform: scale(1.02);
-  box-shadow: 0 0 0 3px var(--accent);
-  z-index: 2;
-}
-
-.tile:active {
-  transform: scale(0.985);
-}
-
-.tile-art {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-.mini {
-  position: relative;
-  overflow: hidden;
-}
-
-.tile-label {
-  flex: none;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 3px;
-}
-
-.tile-title {
-  font-family: 'Neodgm', 'Pretendard', sans-serif;
-  font-size: 12.5px;
-  font-weight: 400;
-  letter-spacing: 0;
-}
-
-.tile-meta {
-  margin-left: auto;
-  font-size: 11.5px;
-  color: var(--fg2);
 }
 
 /* ── 테마 띠 ──────────────────────────────────────────────── */
 
 .strip {
-  flex: none;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
+  justify-content: center;
 }
 
 .strip-head {
   display: flex;
   align-items: baseline;
   gap: 10px;
-  padding: 0 3px;
+  padding: 0 4px;
   min-width: 0;
 }
 
 .strip-title {
   flex: none;
-  font-size: 10.5px;
-  font-family: 'Neodgm', 'Pretendard', sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.06em;
+  font-size: 13px;
+  letter-spacing: 0.14em;
   color: var(--fg2);
-}
-
-.strip-blurb {
-  min-width: 0;
-  font-size: 11px;
-  color: var(--fg3);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .strip-track {
   display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 4px 3px 6px;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-content: center;
+  overflow-y: auto;
+  padding: 8px 4px 10px;
   scrollbar-width: none;
 }
 
@@ -301,12 +206,11 @@ input {
 
 .chip {
   flex: 0 0 auto;
-  width: 84px;
+  width: 104px;
   padding: 0;
-  border: 1px solid #505050;
-  border-radius: 5px;
+  border-radius: var(--r);
   background: var(--panel);
-  box-shadow: 2px 2px 0 var(--pixel-shadow);
+  box-shadow: 0 0 0 2px var(--border);
   transition:
     transform var(--dur) var(--ease),
     box-shadow var(--dur) var(--ease),
@@ -316,9 +220,10 @@ input {
 .chip-swatch {
   position: relative;
   display: flex;
-  height: 30px;
-  border-radius: 4px 4px 0 0;
+  height: 40px;
+  border-radius: var(--r) var(--r) 0 0;
   overflow: hidden;
+  box-shadow: inset 0 -2px 0 var(--border);
 }
 
 .chip-swatch i {
@@ -329,29 +234,33 @@ input {
   position: absolute;
   right: 4px;
   bottom: 4px;
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   border-radius: 2px;
   background: var(--accent);
   color: var(--on-accent);
   display: grid;
   place-items: center;
+  box-shadow: 0 0 0 2px var(--border);
 }
 
 .chip-name {
   display: block;
-  height: 22px;
-  line-height: 22px;
-  font-family: 'Neodgm', 'Pretendard', sans-serif;
-  font-size: 11px;
-  font-weight: 400;
+  height: 28px;
+  line-height: 28px;
+  padding: 0 6px;
+  font-size: 12px;
   color: var(--fg2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   transition: color var(--dur) var(--ease);
 }
 
 .chip[data-selected] {
   transform: scale(1.06);
   box-shadow: 0 0 0 3px var(--accent);
+  z-index: 1;
 }
 
 .chip[data-selected] .chip-name {
@@ -372,8 +281,9 @@ input {
   gap: 10px;
   padding: 0 14px;
   background: var(--panel);
-  border-top: 1px solid #555;
-  box-shadow: inset 0 2px 0 #242424;
+  box-shadow:
+    inset 0 2px 0 #ffffff10,
+    0 -2px 0 var(--border);
 }
 
 .bar-gap {
@@ -387,9 +297,7 @@ input {
 }
 
 .stepper-label {
-  font-family: 'Neodgm', 'Pretendard', sans-serif;
-  font-size: 11px;
-  font-weight: 400;
+  font-size: 12px;
   color: var(--fg2);
 }
 
@@ -398,10 +306,9 @@ input {
   align-items: center;
   height: 32px;
   padding: 0 2px;
-  border: 1px solid var(--edge);
-  border-radius: 4px;
+  border-radius: var(--r);
   background: var(--sunk);
-  box-shadow: 2px 2px 0 var(--pixel-shadow);
+  box-shadow: 0 0 0 2px var(--border);
   transition:
     transform var(--dur) var(--ease),
     box-shadow var(--dur) var(--ease);
@@ -415,7 +322,7 @@ input {
 .stepper-arrow {
   width: 24px;
   height: 28px;
-  border-radius: 2px;
+  border-radius: 4px;
   display: grid;
   place-items: center;
   color: var(--fg2);
@@ -439,25 +346,20 @@ input {
 }
 
 .stepper-value {
-  min-width: 38px;
+  min-width: 42px;
   padding: 0 2px;
   text-align: center;
-  font-family: 'Neodgm', 'Pretendard', sans-serif;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: 13px;
   font-variant-numeric: tabular-nums;
 }
 
 .btn {
   height: 32px;
   padding: 0 14px;
-  border: 1px solid var(--edge);
-  border-radius: 4px;
+  border-radius: var(--r);
   background: var(--sunk);
-  box-shadow: 2px 2px 0 var(--pixel-shadow);
-  font-family: 'Neodgm', 'Pretendard', sans-serif;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: 13px;
+  box-shadow: 0 0 0 2px var(--border);
   transition:
     background var(--dur) var(--ease),
     transform var(--dur) var(--ease),
@@ -465,7 +367,7 @@ input {
 }
 
 .btn:hover {
-  background: #474747;
+  background: #2e2e2e;
 }
 
 .btn:focus {
@@ -474,8 +376,7 @@ input {
 }
 
 .btn:active:not(:disabled) {
-  transform: translate(2px, 2px);
-  box-shadow: none;
+  transform: scale(0.97);
 }
 
 .btn-icon {
@@ -486,9 +387,11 @@ input {
 }
 
 .btn-primary {
-  border-color: var(--accent-hi);
   background: var(--accent);
   color: var(--on-accent);
+  box-shadow:
+    0 0 0 2px var(--border),
+    2px 0 0 0 var(--joy-red);
 }
 
 .btn-primary:hover {
@@ -497,7 +400,9 @@ input {
 
 /* 네온 위에 네온 링은 안 보인다. 강조 버튼만 흰 링을 쓴다. */
 .btn-primary:focus {
-  box-shadow: 0 0 0 3px var(--fg);
+  box-shadow:
+    0 0 0 3px var(--fg),
+    2px 0 0 0 var(--joy-red);
 }
 
 .btn:disabled {
@@ -519,18 +424,16 @@ input {
   align-items: center;
   gap: 7px;
   padding: 0 2px;
-  font-family: 'Neodgm', 'Pretendard', sans-serif;
-  font-size: 11px;
-  font-weight: 400;
+  font-size: 12px;
   color: var(--fg2);
   font-variant-numeric: tabular-nums;
 }
 
 .status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 1px;
-  background: #6e6e6e;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: #4a4a4a;
   transition: background var(--dur) var(--ease);
 }
 
@@ -550,7 +453,7 @@ input {
   background: var(--red);
 }
 
-/* ── 덮개(설정 / 미리보기) ────────────────────────────────── */
+/* ── 덮개(설정) ───────────────────────────────────────────── */
 
 .sheet {
   position: absolute;
@@ -581,8 +484,7 @@ input {
 
 .sheet-title {
   margin: 0;
-  font-size: 13.5px;
-  font-weight: 700;
+  font-size: 14px;
 }
 
 .sheet-head .btn-icon {
@@ -604,8 +506,8 @@ input {
 }
 
 .sheet-body::-webkit-scrollbar-thumb {
-  background: #4e4e4e;
-  border-radius: 3px;
+  background: #333333;
+  border-radius: 2px;
 }
 
 .srow {
@@ -614,7 +516,7 @@ input {
   align-items: center;
   height: 40px;
   padding: 0 10px;
-  border-radius: 9px;
+  border-radius: var(--r);
   transition: background var(--dur) var(--ease);
 }
 
@@ -627,7 +529,7 @@ input {
 }
 
 .srow-label {
-  font-size: 12.5px;
+  font-size: 13px;
 }
 
 .srow-control {
@@ -637,23 +539,21 @@ input {
   gap: 8px;
 }
 
-/* 목록 안에서는 왼쪽 이름이 이미 라벨이다. */
 .srow .stepper-label {
   display: none;
 }
 
-/* 하단 바에서는 컨트롤이 패널 위에 얹혀 저절로 구분되지만, 설정 목록은
-   바탕색 위에 바로 놓인다. 여기서만 한 단계 밝게 올려 윤곽을 만든다. */
 .srow .stepper-box {
-  background: #484848;
+  background: #2c2c2c;
 }
 
 .toggle {
   position: relative;
   width: 46px;
   height: 26px;
-  border-radius: 13px;
-  background: #4a4a4a;
+  border-radius: 4px;
+  background: #2a2a2a;
+  box-shadow: 0 0 0 2px var(--border);
   transition:
     background var(--dur) var(--ease),
     box-shadow var(--dur) var(--ease),
@@ -670,8 +570,8 @@ input {
   left: 3px;
   width: 20px;
   height: 20px;
-  border-radius: 50%;
-  background: #8a8a8a;
+  border-radius: 2px;
+  background: #6a6a6a;
   transition:
     transform var(--dur) var(--ease),
     background var(--dur) var(--ease);
@@ -705,8 +605,8 @@ input {
   appearance: none;
   width: 150px;
   height: 6px;
-  border-radius: 3px;
-  background: #4a4a4a;
+  border-radius: 2px;
+  background: #2a2a2a;
   transition: box-shadow var(--dur) var(--ease);
 }
 
@@ -714,7 +614,7 @@ input {
   -webkit-appearance: none;
   width: 16px;
   height: 16px;
-  border-radius: 50%;
+  border-radius: 2px;
   background: var(--fg);
   transition: background var(--dur) var(--ease);
 }
@@ -731,7 +631,6 @@ input {
   min-width: 34px;
   text-align: right;
   font-size: 12px;
-  font-weight: 600;
   color: var(--fg2);
   font-variant-numeric: tabular-nums;
 }
@@ -740,8 +639,9 @@ input {
   flex: none;
   margin-top: 8px;
   padding: 10px;
-  border-radius: 11px;
+  border-radius: var(--r);
   background: var(--panel);
+  box-shadow: 0 0 0 2px var(--border);
 }
 
 .editor-tabs {
@@ -753,11 +653,11 @@ input {
 .tab {
   height: 26px;
   padding: 0 13px;
-  border-radius: 8px;
+  border-radius: 4px;
   background: var(--sunk);
   font-size: 12px;
-  font-weight: 700;
   color: var(--fg2);
+  box-shadow: 0 0 0 2px var(--border);
   transition:
     background var(--dur) var(--ease),
     color var(--dur) var(--ease),
@@ -766,7 +666,7 @@ input {
 }
 
 .tab:hover {
-  background: #474747;
+  background: #2e2e2e;
 }
 
 .tab[data-on] {
@@ -801,8 +701,7 @@ input {
 .field-no {
   width: 12px;
   text-align: center;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
   color: var(--fg2);
 }
 
@@ -812,10 +711,11 @@ input {
   height: 28px;
   padding: 0 9px;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   background: var(--sunk);
   color: var(--fg);
   font-size: 12px;
+  box-shadow: 0 0 0 2px var(--border);
   user-select: text;
   cursor: text;
   transition: box-shadow var(--dur) var(--ease);
@@ -823,22 +723,6 @@ input {
 
 .field input:focus {
   box-shadow: 0 0 0 2px var(--accent);
-}
-
-/* ── 전체 미리보기 ────────────────────────────────────────── */
-
-.preview-stage {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  place-items: center;
-  padding-bottom: 6px;
-}
-
-.preview-crop {
-  overflow: hidden;
-  border-radius: 10px;
-  box-shadow: 0 0 0 1px #ffffff1f;
 }
 
 /* ── 움직임 줄이기 ────────────────────────────────────────── */
@@ -851,7 +735,6 @@ input {
     scroll-behavior: auto !important;
   }
 
-  .tile:focus,
   .chip[data-selected],
   .stepper-box:focus,
   .btn:focus {

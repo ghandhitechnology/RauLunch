@@ -12,7 +12,7 @@ import { useOverlay } from './hooks'
 import { Stepper } from './Stepper'
 
 /**
- * 설정 화면. 새 창을 띄우지 않고 타일 위로 덮어 내려온다 —
+ * 설정 화면. 새 창을 띄우지 않고 테마 띠 위로 덮어 내려온다 —
  * 창이 하나뿐이어야 "작은 기계" 라는 인상이 유지된다.
  */
 
