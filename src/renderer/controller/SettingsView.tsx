@@ -70,7 +70,9 @@ function Toggle({
 export function SettingsView({ settings, onPatch, onClose }: SettingsViewProps) {
   const bodyRef = useRef<HTMLDivElement | null>(null)
   const [day, setDay] = useState(WEEKDAYS[0])
-  const [teacherDraft, setTeacherDraft] = useState(settings.teacherNames.join('\n'))
+  // 실행 중 업데이트나 예전 main 프로세스가 넘긴 설정에는 이 키가 없을 수 있다.
+  const teacherNames = settings.teacherNames ?? []
+  const [teacherDraft, setTeacherDraft] = useState(teacherNames.join('\n'))
 
   const manual = settings.manualTimetable[day] ?? []
 
@@ -88,7 +90,7 @@ export function SettingsView({ settings, onPatch, onClose }: SettingsViewProps) 
       .map((name) => name.trim())
       .filter(Boolean)
     const unique = [...new Set(teacherNames)]
-    if (unique.join('\u0000') !== settings.teacherNames.join('\u0000')) {
+    if (unique.join('\u0000') !== teacherNames.join('\u0000')) {
       onPatch({ teacherNames: unique })
     }
   }
@@ -184,7 +186,6 @@ export function SettingsView({ settings, onPatch, onClose }: SettingsViewProps) 
 
         <section className="teacher-editor">
           <label htmlFor="teacher-names">교사 이름</label>
-          <span>한 줄에 한 명씩 입력하면 시간표의 *를 완성합니다.</span>
           <textarea
             id="teacher-names"
             value={teacherDraft}

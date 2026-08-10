@@ -267,7 +267,7 @@ async function applyCurrentWallpaper(): Promise<{ ok: boolean; detail: string }>
   try {
     const wallpaperData: WallpaperData = {
       ...data,
-      timetable: resolveTimetableTeacherNames(data.timetable, settings.teacherNames),
+      timetable: resolveTimetableTeacherNames(data.timetable, settings.teacherNames ?? []),
     }
     const shot = await captureWallpaper({
       theme: settings.theme,
@@ -390,7 +390,7 @@ async function applySettingsPatch(patch: Partial<Settings>): Promise<AppState> {
   const needsRedraw =
     settings.theme !== before.theme ||
     settings.iconSafeRatio !== before.iconSafeRatio ||
-    settings.teacherNames.join('\u0000') !== before.teacherNames.join('\u0000')
+    (settings.teacherNames ?? []).join('\u0000') !== (before.teacherNames ?? []).join('\u0000')
   if (data) data = { ...data, grade: settings.grade, classNo: settings.classNo }
   publish()
   if (needsRedraw) void applyCurrentWallpaper()

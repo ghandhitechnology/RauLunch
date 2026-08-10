@@ -456,8 +456,8 @@ input {
 /* ── 덮개(설정) ───────────────────────────────────────────── */
 
 .sheet {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  inset: 36px 0 0;
   z-index: 20;
   display: flex;
   flex-direction: column;
@@ -499,6 +499,7 @@ input {
   display: flex;
   flex-direction: column;
   gap: 1px;
+  overscroll-behavior: contain;
 }
 
 .sheet-body::-webkit-scrollbar {
@@ -638,8 +639,7 @@ input {
 .teacher-editor {
   flex: none;
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 4px 12px;
+  gap: 6px;
   margin-top: 8px;
   padding: 10px;
   border-radius: var(--r);
@@ -651,16 +651,10 @@ input {
   font-size: 13px;
 }
 
-.teacher-editor span {
-  align-self: center;
-  color: var(--fg2);
-  font-size: 11px;
-}
-
 .teacher-editor textarea {
-  grid-column: 1 / -1;
-  min-height: 62px;
-  resize: vertical;
+  height: 64px;
+  min-height: 64px;
+  resize: none;
   padding: 8px 9px;
   border: none;
   border-radius: 4px;
