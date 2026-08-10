@@ -25,7 +25,11 @@ import {
 } from './config'
 import { log } from './logger'
 import { fetchMeal, type SchoolCode, type SchoolCodeStore } from './fetch/meal'
-import { buildManualTimetable, fetchTimetable } from './fetch/timetable'
+import {
+  buildManualTimetable,
+  fetchTimetable,
+  resolveTimetableTeacherNames,
+} from './fetch/timetable'
 import { Scheduler } from './scheduler'
 import { applyWallpaper } from './wallpaper'
 import { apply as applyAutostart, isEnabled as isAutostartEnabled } from './autostart'
@@ -261,9 +265,13 @@ async function runRefresh(): Promise<boolean | null> {
 async function applyCurrentWallpaper(): Promise<{ ok: boolean; detail: string }> {
   if (!data) return { ok: false, detail: '보여줄 자료가 아직 없습니다' }
   try {
+    const wallpaperData: WallpaperData = {
+      ...data,
+      timetable: resolveTimetableTeacherNames(data.timetable, settings.teacherNames),
+    }
     const shot = await captureWallpaper({
       theme: settings.theme,
-      data,
+      data: wallpaperData,
       iconSafeRatio: settings.iconSafeRatio,
       outPath: getPaths().wallpaper,
     })
@@ -380,7 +388,9 @@ async function applySettingsPatch(patch: Partial<Settings>): Promise<AppState> {
 
   // 겉모습만 바뀐 경우엔 이미 있는 자료로 다시 그리기만 하면 된다.
   const needsRedraw =
-    settings.theme !== before.theme || settings.iconSafeRatio !== before.iconSafeRatio
+    settings.theme !== before.theme ||
+    settings.iconSafeRatio !== before.iconSafeRatio ||
+    settings.teacherNames.join('\u0000') !== before.teacherNames.join('\u0000')
   if (data) data = { ...data, grade: settings.grade, classNo: settings.classNo }
   publish()
   if (needsRedraw) void applyCurrentWallpaper()

@@ -79,7 +79,9 @@ export function useOverlay(open: boolean, onClose: () => void) {
       }
       if (e.key !== 'Tab' || !root) return
       const items = Array.from(
-        root.querySelectorAll<HTMLElement>('button, input, [tabindex]:not([tabindex="-1"])'),
+        root.querySelectorAll<HTMLElement>(
+          'button, input, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
       ).filter((el) => !el.hasAttribute('disabled'))
       if (items.length === 0) return
       const first = items[0]

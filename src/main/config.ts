@@ -178,6 +178,18 @@ function sanitizeManualTimetable(value: unknown): Record<string, string[]> {
   return out
 }
 
+function sanitizeTeacherNames(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  return [
+    ...new Set(
+      value
+        .filter((name): name is string => typeof name === 'string')
+        .map((name) => name.trim())
+        .filter(Boolean),
+    ),
+  ]
+}
+
 /**
  * 손으로 고친 설정, 옛 버전이 남긴 키, 타입이 어긋난 값을 전부 흡수한다.
  * DEFAULT_SETTINGS 에 없는 키는 그대로 버린다.
@@ -202,6 +214,7 @@ export function sanitizeSettings(raw: unknown): Settings {
       typeof src.preferManualTimetable === 'boolean'
         ? src.preferManualTimetable
         : DEFAULT_SETTINGS.preferManualTimetable,
+    teacherNames: sanitizeTeacherNames(src.teacherNames),
   }
 }
 

@@ -68,9 +68,9 @@ function Toggle({
 }
 
 export function SettingsView({ settings, onPatch, onClose }: SettingsViewProps) {
-  const ref = useOverlay(true, onClose)
   const bodyRef = useRef<HTMLDivElement | null>(null)
   const [day, setDay] = useState(WEEKDAYS[0])
+  const [teacherDraft, setTeacherDraft] = useState(settings.teacherNames.join('\n'))
 
   const manual = settings.manualTimetable[day] ?? []
 
@@ -82,10 +82,28 @@ export function SettingsView({ settings, onPatch, onClose }: SettingsViewProps) 
     onPatch({ manualTimetable: { ...settings.manualTimetable, [day]: trimmed } })
   }
 
+  const saveTeacherNames = () => {
+    const teacherNames = teacherDraft
+      .split(/[\n,]/)
+      .map((name) => name.trim())
+      .filter(Boolean)
+    const unique = [...new Set(teacherNames)]
+    if (unique.join('\u0000') !== settings.teacherNames.join('\u0000')) {
+      onPatch({ teacherNames: unique })
+    }
+  }
+
+  const closeSettings = () => {
+    saveTeacherNames()
+    onClose()
+  }
+
+  const ref = useOverlay(true, closeSettings)
+
   // 세로로 쌓인 목록이므로 위아래는 항목 이동. 글자를 치는 중이면 건드리지 않는다.
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return
-    if ((e.target as HTMLElement).tagName === 'INPUT') return
+    if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) return
     const items = Array.from(
       bodyRef.current?.querySelectorAll<HTMLElement>('[data-stop]') ?? [],
     )
@@ -100,7 +118,7 @@ export function SettingsView({ settings, onPatch, onClose }: SettingsViewProps) 
     <div className="sheet" ref={ref} role="dialog" aria-modal="true" aria-label="설정">
       <header className="sheet-head">
         <h2 className="sheet-title">설정</h2>
-        <button className="btn btn-icon" onClick={onClose} aria-label="닫기" data-autofocus>
+        <button className="btn btn-icon" onClick={closeSettings} aria-label="닫기" data-autofocus>
           <Close />
         </button>
       </header>
@@ -163,6 +181,20 @@ export function SettingsView({ settings, onPatch, onClose }: SettingsViewProps) 
             onChange={(v) => onPatch({ preferManualTimetable: v })}
           />
         </Row>
+
+        <section className="teacher-editor">
+          <label htmlFor="teacher-names">교사 이름</label>
+          <span>한 줄에 한 명씩 입력하면 시간표의 *를 완성합니다.</span>
+          <textarea
+            id="teacher-names"
+            value={teacherDraft}
+            onChange={(e) => setTeacherDraft(e.target.value)}
+            onBlur={saveTeacherNames}
+            placeholder={'김완수\n이민지'}
+            spellCheck={false}
+            data-stop
+          />
+        </section>
 
         <section className="editor">
           <div className="editor-tabs" role="tablist" aria-label="요일">

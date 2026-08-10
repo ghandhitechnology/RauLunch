@@ -173,6 +173,33 @@ export function targetDate(today?: Date): Date {
   return d
 }
 
+/**
+ * 컴시간이 마지막 글자를 *로 가린 교사명을 설정의 전체 이름으로 복원한다.
+ * 후보가 정확히 하나일 때만 바꿔 잘못된 이름을 화면에 내보내지 않는다.
+ */
+export function resolveMaskedTeacherName(masked: string, teacherNames: string[]): string {
+  if (!masked.endsWith('*')) return masked
+  const prefix = masked.slice(0, -1)
+  const matches = teacherNames.filter(
+    (name) => name.length === masked.length && name.startsWith(prefix),
+  )
+  return matches.length === 1 ? matches[0] : masked
+}
+
+export function resolveTimetableTeacherNames(
+  timetable: TimetableData,
+  teacherNames: string[],
+): TimetableData {
+  if (teacherNames.length === 0) return timetable
+  return {
+    ...timetable,
+    periods: timetable.periods.map((period) => ({
+      ...period,
+      teacher: resolveMaskedTeacherName(period.teacher, teacherNames),
+    })),
+  }
+}
+
 // ---------------------------------------------------------------- 네트워크
 
 async function get(url: string, encoding: 'euc-kr' | 'utf-8'): Promise<string> {

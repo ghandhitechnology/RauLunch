@@ -635,6 +635,49 @@ input {
   font-variant-numeric: tabular-nums;
 }
 
+.teacher-editor {
+  flex: none;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: var(--r);
+  background: var(--panel);
+  box-shadow: 0 0 0 2px var(--border);
+}
+
+.teacher-editor label {
+  font-size: 13px;
+}
+
+.teacher-editor span {
+  align-self: center;
+  color: var(--fg2);
+  font-size: 11px;
+}
+
+.teacher-editor textarea {
+  grid-column: 1 / -1;
+  min-height: 62px;
+  resize: vertical;
+  padding: 8px 9px;
+  border: none;
+  border-radius: 4px;
+  background: var(--sunk);
+  color: var(--fg);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+  box-shadow: 0 0 0 2px var(--border);
+  user-select: text;
+  transition: box-shadow var(--dur) var(--ease);
+}
+
+.teacher-editor textarea:focus {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
 .editor {
   flex: none;
   margin-top: 8px;

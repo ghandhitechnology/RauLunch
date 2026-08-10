@@ -32,7 +32,7 @@ export interface Period {
   /** "08:50". 모르면 빈 문자열. */
   time: string
   subject: string
-  /** "김완*" 처럼 마스킹되어 온다. 모르면 빈 문자열. */
+  /** 컴시간에서는 "김완*"처럼 마스킹되어 올 수 있다. 모르면 빈 문자열. */
   teacher: string
 }
 
@@ -82,6 +82,8 @@ export interface Settings {
   manualTimetable: Record<string, string[]>
   /** 수동 시간표를 항상 우선 사용. */
   preferManualTimetable: boolean
+  /** 컴시간의 마스킹된 교사명을 완성하는 데 사용할 전체 이름 목록. */
+  teacherNames: string[]
 }
 
 export const VALID_GRADES = [1, 2, 3] as const
@@ -104,6 +106,7 @@ export const DEFAULT_SETTINGS: Settings = {
   iconSafeRatio: 0.15,
   manualTimetable: {},
   preferManualTimetable: false,
+  teacherNames: [],
 }
 
 /** 마지막 갱신 시도 결과. 컨트롤러 하단 바가 이걸 그대로 보여준다. */
