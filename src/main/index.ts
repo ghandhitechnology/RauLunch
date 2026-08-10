@@ -301,8 +301,11 @@ function createControllerWindow(): BrowserWindow {
     width: 720,
     height: 480,
     useContentSize: true,
-    resizable: false,
-    maximizable: false,
+    // 사이드바(132) + 테마 칩 하나 정도가 남도록 하한을 둔다. 레이아웃은 flex 로 창 크기를 따라간다.
+    minWidth: 420,
+    minHeight: 400,
+    resizable: true,
+    maximizable: true,
     fullscreenable: false,
     show: false,
     // 닌텐도 홈 화면 같은 껍데기가 표면 전체를 갖는다. OS 제목 표시줄은 한 줄도 남기지 않는다.
