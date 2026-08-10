@@ -60,7 +60,7 @@ export function App() {
       {/* 창 손잡이. macOS 에서는 OS 신호등이 왼쪽 위를 쓰므로 그 자리를 비우고
           우리 버튼은 그리지 않는다. 나머지 플랫폼은 프레임이 아예 없어서 직접 그린다. */}
       <header className="chrome" data-mac={isMac || undefined}>
-        <span className="chrome-title">급식 컨트롤러</span>
+        <span className="chrome-title">ㅁㄴㅇ</span>
         {!isMac && (
           <div className="chrome-buttons">
             <button

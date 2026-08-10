@@ -187,7 +187,7 @@ function TimetablePanel({ periods, weekdayLabel, empty }: TimetablePanelProps) {
 
 const pixelSpeech: ThemeSkin = {
   id: 'pixel-speech',
-  name: '픽셀 말풍선',
+  name: '클로드',
   blurb: '검은 화면 위 흰 픽셀 캐릭터가 오늘의 급식과 시간표를 말한다.',
   chip: [BLACK, WHITE, DIM],
   fonts: ['Neodgm'],

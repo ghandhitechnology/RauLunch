@@ -6,7 +6,7 @@ import { Check } from './Glyphs'
 import { useRoving } from './hooks'
 
 /**
- * 테마 선택 띠. 현재는 픽셀 말풍선 한 종만 제공한다.
+ * 테마 선택 띠.
  *
  * 칩을 누르면 바로 설정에 저장된다. 지금 적용된 테마에는 체크가 붙는다.
  */
@@ -36,8 +36,7 @@ export function ThemeStrip({ cursorId, appliedId, onCursor, onApply }: ThemeStri
     const track = scrollRef.current
     const chip = track?.children[cursorIndex] as HTMLElement | undefined
     if (!track || !chip) return
-    const left = chip.offsetLeft - (track.clientWidth - chip.offsetWidth) / 2
-    track.scrollTo({ left, behavior: 'smooth' })
+    chip.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' })
   }, [cursorIndex])
 
   const step = (delta: number) => {
@@ -64,9 +63,6 @@ export function ThemeStrip({ cursorId, appliedId, onCursor, onApply }: ThemeStri
 
   return (
     <section className="strip" aria-label="테마">
-      <header className="strip-head">
-        <span className="strip-title">테마</span>
-      </header>
       <div className="strip-track" ref={scrollRef} onKeyDown={onKeyDown}>
         {THEMES.map((theme, i) => (
           <button

@@ -23,10 +23,10 @@ const ICON_SAFE_RATIO = 0.15
 const READY_PREFIX = 'wallpaper-ready:'
 const READY_TIMEOUT_MS = 20_000
 
-const THEME_IDS = ['pixel-speech']
+const THEME_IDS = ['pixel-speech', 'damim-teacher']
 
 /** EMPTY_DATA 로도 찍어볼 테마. 빈 상태가 초라하지 않은지 보는 용도. */
-const EMPTY_TARGETS = ['pixel-speech']
+const EMPTY_TARGETS = ['pixel-speech', 'damim-teacher']
 
 /**
  * fixtures.ts 를 그대로 읽어 쓴다. 손으로 베껴두면 원본이 바뀌었을 때

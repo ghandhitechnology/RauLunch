@@ -47,8 +47,8 @@ export interface TimetableData {
   manual: boolean
 }
 
-/** 유일한 바탕화면 테마. 파일명·설정값·CSS 클래스가 이 id 를 공유한다. */
-export const THEME_IDS = ['pixel-speech'] as const
+/** 바탕화면 테마 id. 파일명·설정값·CSS 클래스가 이 id 를 공유한다. */
+export const THEME_IDS = ['pixel-speech', 'damim-teacher'] as const
 export type ThemeId = (typeof THEME_IDS)[number]
 
 export const DEFAULT_THEME: ThemeId = 'pixel-speech'

@@ -8,7 +8,10 @@ const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(HERE, '..')
 const SHOTS = join(ROOT, 'docs', 'shots')
 
-const ITEMS = [['pixel-speech', '픽셀 말풍선']]
+const ITEMS = [
+  ['pixel-speech', '클로드'],
+  ['damim-teacher', '담임쌤'],
+]
 
 const CELL_W = 480, CELL_H = 270, COLS = 4, LABEL = 30
 const W = CELL_W * COLS, H = (CELL_H + LABEL) * Math.ceil(ITEMS.length / COLS)
