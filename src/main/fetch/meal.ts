@@ -1,5 +1,5 @@
 /**
- * NEIS 급식식단정보 API 에서 인천과학고 급식을 가져온다 (API 키 없이 소량 호출).
+ * NEIS 급식식단정보 API 에서 인천여고 급식을 가져온다 (베타 테스트용 임시 전환).
  *
  * 파이썬 원본(fetch_meal.py)의 동작을 그대로 옮겼다.
  * 다만 캐시 되살리기는 여기서 하지 않는다 — 당일·주간 조회가 모두 실패하면 Error 를 던지고,
@@ -10,7 +10,7 @@
 import { MEAL_KEYS, type MealData, type MealKey } from '../../shared/types'
 
 export const NEIS_BASE = 'https://open.neis.go.kr/hub'
-export const SCHOOL_NAME = '인천과학고등학교'
+export const SCHOOL_NAME = '인천여자고등학교'
 const TIMEOUT_MS = 10_000
 
 /** "(5.6.13)" 알레르기 표기. 숫자·점·공백만 든 괄호라야 메뉴 이름의 괄호를 안 건드린다. */
