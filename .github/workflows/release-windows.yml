@@ -28,7 +28,9 @@ jobs:
 
       - name: Set version from tag
         shell: bash
-        run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version
+        # package.json 이 이미 같은 버전이면 `npm version` 이 실패한다.
+        # 태그가 정본이므로 그냥 값을 덮어 쓴다.
+        run: npm pkg set "version=${GITHUB_REF_NAME#v}"
 
       - name: Build and publish Windows release
         run: npm run build && npx electron-builder --win --publish always
