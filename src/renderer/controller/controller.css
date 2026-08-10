@@ -12,18 +12,18 @@
 :root {
   font-size: 1px;
 
-  --ground: #2d2d2d;
-  --ground-deep: #252525;
-  --panel: #3a3a3a;
-  --sunk: #2f2f2f;
-  --border: #1a1a1a;
-  --accent: #00c3e3;
-  --accent-hi: #2ad5f2;
-  --on-accent: #08272e;
+  --ground: #161616;
+  --ground-deep: #101010;
+  --panel: #222222;
+  --sunk: #1a1a1a;
+  --border: #0a0a0a;
+  --accent: #d8c9a8;
+  --accent-hi: #e8dcc4;
+  --on-accent: #1a1610;
   --joy-red: #e60012;
-  --fg: #f0f0f0;
-  --fg2: #a8a8a8;
-  --fg3: #7c7c7c;
+  --fg: #ececec;
+  --fg2: #9a9a9a;
+  --fg3: #6e6e6e;
   --amber: #ffb84d;
   --red: #ff6b6b;
 
@@ -132,7 +132,7 @@ input {
 }
 
 .chrome-btn:hover {
-  background: #4a4a4a;
+  background: #333333;
   color: var(--fg);
 }
 
@@ -367,7 +367,7 @@ input {
 }
 
 .btn:hover {
-  background: #474747;
+  background: #2e2e2e;
 }
 
 .btn:focus {
@@ -433,7 +433,7 @@ input {
   width: 8px;
   height: 8px;
   border-radius: 2px;
-  background: #6e6e6e;
+  background: #4a4a4a;
   transition: background var(--dur) var(--ease);
 }
 
@@ -506,7 +506,7 @@ input {
 }
 
 .sheet-body::-webkit-scrollbar-thumb {
-  background: #4e4e4e;
+  background: #333333;
   border-radius: 2px;
 }
 
@@ -544,7 +544,7 @@ input {
 }
 
 .srow .stepper-box {
-  background: #484848;
+  background: #2c2c2c;
 }
 
 .toggle {
@@ -552,7 +552,7 @@ input {
   width: 46px;
   height: 26px;
   border-radius: 4px;
-  background: #4a4a4a;
+  background: #2a2a2a;
   box-shadow: 0 0 0 2px var(--border);
   transition:
     background var(--dur) var(--ease),
@@ -571,7 +571,7 @@ input {
   width: 20px;
   height: 20px;
   border-radius: 2px;
-  background: #8a8a8a;
+  background: #6a6a6a;
   transition:
     transform var(--dur) var(--ease),
     background var(--dur) var(--ease);
@@ -606,7 +606,7 @@ input {
   width: 150px;
   height: 6px;
   border-radius: 2px;
-  background: #4a4a4a;
+  background: #2a2a2a;
   transition: box-shadow var(--dur) var(--ease);
 }
 
@@ -666,7 +666,7 @@ input {
 }
 
 .tab:hover {
-  background: #474747;
+  background: #2e2e2e;
 }
 
 .tab[data-on] {

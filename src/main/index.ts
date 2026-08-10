@@ -292,7 +292,7 @@ function createControllerWindow(): BrowserWindow {
     frame: process.platform === 'darwin',
     // macOS 신호등만 남긴다. 36px 손잡이 한가운데에 오도록 내려 앉힌다.
     trafficLightPosition: { x: 14, y: 11 },
-    backgroundColor: '#2D2D2D',
+    backgroundColor: '#161616',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
