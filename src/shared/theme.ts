@@ -13,7 +13,7 @@ import type { MealKey, Period, ThemeId, WallpaperData } from './types'
  *      (배경 질감용 repeating-linear-gradient 는 예외 — 평면 패턴이므로 허용)
  *   2. 색은 4단계 이하. 중간 톤은 칠판에서 사라진다.
  *   3. 선은 굵게. 3px 미만 테두리는 뒷자리에서 안 보인다.
- *   4. 어두운 바탕은 chalk / terminal-dark 둘만. 나머지는 밝은 바탕.
+ *   4. 어두운 바탕에서는 밝은 획과 본문 대비를 충분히 확보한다.
  *   5. 본문 글자는 렌더 기준 폭 1920 에서 34px 이상.
  */
 
@@ -25,6 +25,10 @@ export interface SlotGeometry {
   columnGap?: number
   /** 안쪽 여백(px, 1920 기준). 기본 72. */
   padding?: number
+  /** 테마 장식을 위해 방향별 여백을 따로 예약할 때 사용한다. */
+  paddingTop?: number
+  paddingRight?: number
+  paddingBottom?: number
   /** 헤더와 본문 사이 간격(px, 1920 기준). 기본 48. */
   headerGap?: number
 }
@@ -95,6 +99,9 @@ export const DEFAULT_GEOMETRY: Required<SlotGeometry> = {
   columns: '1.15fr 1fr',
   columnGap: 64,
   padding: 72,
+  paddingTop: 72,
+  paddingRight: 72,
+  paddingBottom: 72,
   headerGap: 48,
 }
 

@@ -6,7 +6,7 @@ import { Check } from './Glyphs'
 import { useRoving } from './hooks'
 
 /**
- * 테마 띠.
+ * 테마 선택 띠. 현재는 픽셀 말풍선 한 종만 제공한다.
  *
  * 칩을 누르면 바로 설정에 저장된다. 지금 적용된 테마에는 체크가 붙는다.
  */
