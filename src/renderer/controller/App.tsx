@@ -10,7 +10,7 @@ import { ThemeStrip } from './ThemeStrip'
 /**
  * 컨트롤러 창 전체.
  *
- * 화면은 위에서부터 창 손잡이 / 테마 띠 / 설정 바, 세 층이다.
+ * 화면은 창 손잡이 아래에 사이드바(설정)와 테마 띠가 나란히 앉는다.
  * 테마 커서는 설정값과 따로 논다 — 고르면 바로 저장되고,
  * 적용된 테마에는 체크가 붙는다.
  */
@@ -81,28 +81,30 @@ export function App() {
         )}
       </header>
 
-      <main className="main">
-        <ThemeStrip
-          cursorId={cursor}
-          appliedId={settings.theme}
-          onCursor={setCursor}
-          onApply={(id) => patch({ theme: id })}
+      <div className="body">
+        <ConfigBar
+          settings={settings}
+          status={state.status}
+          applying={applying}
+          onPatch={patch}
+          onOpenSettings={() => setSheet('settings')}
+          onRefresh={() => void api.refresh()}
+          onApply={() => void applyWallpaper()}
         />
 
-        {sheet === 'settings' && (
-          <SettingsView settings={settings} onPatch={patch} onClose={() => setSheet('none')} />
-        )}
-      </main>
+        <main className="main">
+          <ThemeStrip
+            cursorId={cursor}
+            appliedId={settings.theme}
+            onCursor={setCursor}
+            onApply={(id) => patch({ theme: id })}
+          />
 
-      <ConfigBar
-        settings={settings}
-        status={state.status}
-        applying={applying}
-        onPatch={patch}
-        onOpenSettings={() => setSheet('settings')}
-        onRefresh={() => void api.refresh()}
-        onApply={() => void applyWallpaper()}
-      />
+          {sheet === 'settings' && (
+            <SettingsView settings={settings} onPatch={patch} onClose={() => setSheet('none')} />
+          )}
+        </main>
+      </div>
     </div>
   )
 }

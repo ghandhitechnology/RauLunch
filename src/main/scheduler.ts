@@ -129,7 +129,7 @@ export interface SchedulerOptions {
   runRefresh: (reason: string) => Promise<RefreshResult>
   /** 매 tick 다시 읽는다. 던지면 기본 주기로 떨어진다. */
   loadSettings: () => Settings
-  /** 상태가 바뀔 때마다 불린다. 컨트롤러 하단 바가 이걸 그대로 보여준다. */
+  /** 상태가 바뀔 때마다 불린다. 컨트롤러 사이드바가 이걸 그대로 보여준다. */
   onStatus?: (status: StatusSnapshot) => void
   log?: (message: string) => void
   /** 테스트용 주입점. */

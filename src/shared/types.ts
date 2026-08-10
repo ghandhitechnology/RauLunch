@@ -109,7 +109,7 @@ export const DEFAULT_SETTINGS: Settings = {
   teacherNames: [],
 }
 
-/** 마지막 갱신 시도 결과. 컨트롤러 하단 바가 이걸 그대로 보여준다. */
+/** 마지막 갱신 시도 결과. 컨트롤러 사이드바가 이걸 그대로 보여준다. */
 export interface StatusSnapshot {
   /** 마지막으로 성공한 갱신의 ISO 시각. 아직 없으면 null. */
   lastSuccessAt: string | null

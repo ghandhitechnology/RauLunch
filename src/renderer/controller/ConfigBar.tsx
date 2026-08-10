@@ -12,7 +12,7 @@ import { Refresh } from './Glyphs'
 import { useRoving } from './hooks'
 import { Stepper } from './Stepper'
 
-/** 하단 고정 바. 자주 만지는 것만 올라온다 — 나머지는 설정 화면으로 보낸다. */
+/** 왼쪽 사이드바. 자주 만지는 것만 올라온다 — 나머지는 설정 화면으로 보낸다. */
 
 export interface ConfigBarProps {
   settings: Settings
@@ -51,10 +51,10 @@ export function ConfigBar({
   const { tone, text } = readStatus(status, applying)
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'ArrowRight') {
+    if (e.key === 'ArrowDown') {
       e.preventDefault()
       roving.move(1)
-    } else if (e.key === 'ArrowLeft') {
+    } else if (e.key === 'ArrowUp') {
       e.preventDefault()
       roving.move(-1)
     }
@@ -67,58 +67,67 @@ export function ConfigBar({
 
   return (
     <div className="bar" onKeyDown={onKeyDown}>
-      <Stepper
-        label="학년"
-        values={VALID_GRADES}
-        value={settings.grade}
-        onChange={(v) => onPatch({ grade: v })}
-        {...slot(0)}
-      />
-      <Stepper
-        label="반"
-        values={VALID_CLASSES}
-        value={settings.classNo}
-        onChange={(v) => onPatch({ classNo: v })}
-        {...slot(1)}
-      />
-      <Stepper
-        label="갱신"
-        values={VALID_REFRESH_INTERVALS}
-        value={settings.refreshIntervalMin}
-        format={(v) => REFRESH_INTERVAL_LABELS[v] ?? `${v}분`}
-        onChange={(v) => onPatch({ refreshIntervalMin: v })}
-        {...slot(2)}
-      />
+      <div className="bar-section">
+        <Stepper
+          label="학년"
+          size="row"
+          values={VALID_GRADES}
+          value={settings.grade}
+          onChange={(v) => onPatch({ grade: v })}
+          {...slot(0)}
+        />
+        <Stepper
+          label="반"
+          size="row"
+          values={VALID_CLASSES}
+          value={settings.classNo}
+          onChange={(v) => onPatch({ classNo: v })}
+          {...slot(1)}
+        />
+        <Stepper
+          label="갱신"
+          size="row"
+          values={VALID_REFRESH_INTERVALS}
+          value={settings.refreshIntervalMin}
+          format={(v) => REFRESH_INTERVAL_LABELS[v] ?? `${v}분`}
+          onChange={(v) => onPatch({ refreshIntervalMin: v })}
+          {...slot(2)}
+        />
 
-      <button className="btn" {...roving.itemProps(3)} onClick={onOpenSettings}>
-        설정
-      </button>
+        <button className="btn" {...roving.itemProps(3)} onClick={onOpenSettings}>
+          설정
+        </button>
+      </div>
 
       <div className="bar-gap" />
 
-      <div className="status" data-tone={tone} title={status.lastError ?? undefined}>
-        <span className="status-dot" />
-        <span className="status-text">{text}</span>
+      <div className="bar-section bar-foot">
+        <div className="status" data-tone={tone} title={status.lastError ?? undefined}>
+          <span className="status-dot" />
+          <span className="status-text">{text}</span>
+        </div>
+
+        <div className="bar-actions">
+          <button
+            className="btn btn-icon"
+            data-spin={status.refreshing || undefined}
+            {...roving.itemProps(4)}
+            onClick={onRefresh}
+            aria-label="다시 받아오기"
+          >
+            <Refresh />
+          </button>
+
+          <button
+            className="btn btn-primary"
+            {...roving.itemProps(5)}
+            onClick={onApply}
+            disabled={applying}
+          >
+            적용
+          </button>
+        </div>
       </div>
-
-      <button
-        className="btn btn-icon"
-        data-spin={status.refreshing || undefined}
-        {...roving.itemProps(4)}
-        onClick={onRefresh}
-        aria-label="다시 받아오기"
-      >
-        <Refresh />
-      </button>
-
-      <button
-        className="btn btn-primary"
-        {...roving.itemProps(5)}
-        onClick={onApply}
-        disabled={applying}
-      >
-        적용
-      </button>
     </div>
   )
 }

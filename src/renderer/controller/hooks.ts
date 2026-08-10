@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 /**
- * 한 줄(밴드) 안에서 화살표로 옮겨 다니는 커서.
+ * 한 밴드 안에서 화살표로 옮겨 다니는 커서.
  *
  * 밴드 안에서 tab 정지점은 항상 하나뿐이다 — 그래야 Tab 이 "다음 항목" 이 아니라
  * "다음 밴드" 로 넘어간다. 스위치 홈 화면의 이동 감각이 이것이다.
+ * 축(가로/세로)은 호출 쪽이 화살표 키로 정한다.
  */
 export function useRoving(count: number, initial = 0) {
   const [index, setIndex] = useState(initial)
