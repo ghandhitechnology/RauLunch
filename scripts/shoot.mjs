@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { app, BrowserWindow } from 'electron'
 
 /**
- * 12개 테마를 1920x1080 으로 한 장씩 구워 docs/shots 에 떨구는 검수용 스크립트.
+ * 바탕화면 테마를 1920x1080 으로 구워 docs/shots 에 떨구는 검수용 스크립트.
  *
  * src/main/capture.ts 를 그대로 못 쓴다 — 거기 targetSize() 는 주 모니터 크기를
  * 강제로 따라가므로 맥에서 돌리면 1920x1080 이 아닌 크기가 나온다. 검수 이미지는
@@ -23,23 +23,10 @@ const ICON_SAFE_RATIO = 0.15
 const READY_PREFIX = 'wallpaper-ready:'
 const READY_TIMEOUT_MS = 20_000
 
-const THEME_IDS = [
-  'terminal-light',
-  'terminal-dark',
-  'chalk',
-  'marker',
-  'modular',
-  'digital',
-  'stained',
-  'gridpaper',
-  'riso',
-  'poster',
-  'sticker',
-  'minimal',
-]
+const THEME_IDS = ['pixel-speech']
 
 /** EMPTY_DATA 로도 찍어볼 테마. 빈 상태가 초라하지 않은지 보는 용도. */
-const EMPTY_TARGETS = ['chalk', 'modular', 'riso', 'marker', 'gridpaper', 'minimal', 'sticker', 'digital']
+const EMPTY_TARGETS = ['pixel-speech']
 
 /**
  * fixtures.ts 를 그대로 읽어 쓴다. 손으로 베껴두면 원본이 바뀌었을 때

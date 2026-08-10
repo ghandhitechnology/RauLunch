@@ -47,24 +47,11 @@ export interface TimetableData {
   manual: boolean
 }
 
-/** 바탕화면 테마 12종. 파일명·설정값·CSS 클래스 모두 이 id 를 쓴다. */
-export const THEME_IDS = [
-  'terminal-light',
-  'terminal-dark',
-  'chalk',
-  'marker',
-  'modular',
-  'digital',
-  'stained',
-  'gridpaper',
-  'riso',
-  'poster',
-  'sticker',
-  'minimal',
-] as const
+/** 유일한 바탕화면 테마. 파일명·설정값·CSS 클래스가 이 id 를 공유한다. */
+export const THEME_IDS = ['pixel-speech'] as const
 export type ThemeId = (typeof THEME_IDS)[number]
 
-export const DEFAULT_THEME: ThemeId = 'chalk'
+export const DEFAULT_THEME: ThemeId = 'pixel-speech'
 
 /** 바탕화면 한 장을 그리는 데 필요한 전부. */
 export interface WallpaperData {

@@ -3,19 +3,12 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { app, BrowserWindow } from 'electron'
 
-// 12개 테마를 한 장으로 모아 찍는다. SSH 로 붙어 있어 낱장을 열어보기 번거로울 때 쓴다.
+// 현재 테마의 검수 이미지를 라벨과 함께 한 장으로 만든다.
 const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(HERE, '..')
 const SHOTS = join(ROOT, 'docs', 'shots')
 
-const ITEMS = [
-  ['terminal-light', '터미널 · 흰바탕'], ['terminal-dark', '터미널 · 검은바탕'],
-  ['chalk', '분필'], ['marker', '마커'],
-  ['modular', '모듈러'], ['digital', '디지털'],
-  ['stained', '색유리'], ['gridpaper', '모눈종이'],
-  ['riso', '리소리소'], ['poster', '포스터'],
-  ['sticker', '스티커'], ['minimal', '미니멀'],
-]
+const ITEMS = [['pixel-speech', '픽셀 말풍선']]
 
 const CELL_W = 480, CELL_H = 270, COLS = 4, LABEL = 30
 const W = CELL_W * COLS, H = (CELL_H + LABEL) * Math.ceil(ITEMS.length / COLS)

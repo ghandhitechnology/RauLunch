@@ -50,23 +50,6 @@ app.whenReady().then(async () => {
   await win.loadFile(PAGE)
 
   await shoot(win, 'controller-home')
-  // 테마를 몇 개 바꿔가며 타일이 실제로 다시 칠해지는지 본다.
-  // 칩에 id 속성이 없어 이름으로 찾는다.
-  const byName = { chalk: '분필', poster: '포스터', 'terminal-dark': null }
-  for (const [id, name] of Object.entries(byName)) {
-    if (!name) continue
-    await shoot(
-      win,
-      `controller-${id}`,
-      `(() => {
-         const el = [...document.querySelectorAll('.chip')]
-           .find(b => b.textContent.includes(${JSON.stringify(name)}))
-         if (el) el.click()
-         return !!el
-       })()`,
-    )
-  }
-
   win.destroy()
   app.exit(0)
 })

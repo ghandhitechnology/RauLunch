@@ -69,6 +69,13 @@
     "portable": {
       "artifactName": "급식컨트롤러-포터블-${version}.${ext}"
     },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "ghandhitechnology",
+        "repo": "RauLunch"
+      }
+    ],
     "mac": {
       "icon": "resources/icons/app_icon.icns",
       "category": "public.app-category.utility",

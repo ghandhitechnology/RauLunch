@@ -22,8 +22,10 @@
   --fg3: #7c7c7c;
   --amber: #ffb84d;
   --red: #ff6b6b;
+  --edge: #555555;
+  --pixel-shadow: #191919;
 
-  --r: 12px;
+  --r: 7px;
   --dur: 140ms;
   --ease: cubic-bezier(0.2, 0, 0, 1);
 }
@@ -97,10 +99,22 @@ input {
 }
 
 .chrome-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Neodgm', 'Pretendard', sans-serif;
   font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-weight: 400;
+  letter-spacing: 0;
   color: var(--fg);
+}
+
+.chrome-title::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  box-shadow: 3px 3px 0 #08798d;
 }
 
 .chrome-buttons {
@@ -113,7 +127,8 @@ input {
 .chrome-btn {
   width: 30px;
   height: 24px;
-  border-radius: 8px;
+  border: 1px solid var(--edge);
+  border-radius: 4px;
   display: grid;
   place-items: center;
   background: var(--panel);
@@ -178,7 +193,9 @@ input {
   position: relative;
   padding: 0;
   border-radius: var(--r);
+  border: 1px solid #4b4b4b;
   background: var(--panel);
+  box-shadow: 3px 3px 0 var(--pixel-shadow);
   overflow: hidden;
   /* 타일은 button 이다. 브라우저 기본값이 가운데 정렬이라, 테마 패널이
      통째로 가운데로 몰린다. 여기서 되돌려 놓는다. */
@@ -223,9 +240,10 @@ input {
 }
 
 .tile-title {
+  font-family: 'Neodgm', 'Pretendard', sans-serif;
   font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 .tile-meta {
@@ -254,8 +272,9 @@ input {
 .strip-title {
   flex: none;
   font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-family: 'Neodgm', 'Pretendard', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.06em;
   color: var(--fg2);
 }
 
@@ -284,8 +303,10 @@ input {
   flex: 0 0 auto;
   width: 84px;
   padding: 0;
-  border-radius: 10px;
+  border: 1px solid #505050;
+  border-radius: 5px;
   background: var(--panel);
+  box-shadow: 2px 2px 0 var(--pixel-shadow);
   transition:
     transform var(--dur) var(--ease),
     box-shadow var(--dur) var(--ease),
@@ -296,7 +317,7 @@ input {
   position: relative;
   display: flex;
   height: 30px;
-  border-radius: 10px 10px 0 0;
+  border-radius: 4px 4px 0 0;
   overflow: hidden;
 }
 
@@ -310,7 +331,7 @@ input {
   bottom: 4px;
   width: 15px;
   height: 15px;
-  border-radius: 50%;
+  border-radius: 2px;
   background: var(--accent);
   color: var(--on-accent);
   display: grid;
@@ -321,8 +342,9 @@ input {
   display: block;
   height: 22px;
   line-height: 22px;
+  font-family: 'Neodgm', 'Pretendard', sans-serif;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--fg2);
   transition: color var(--dur) var(--ease);
 }
@@ -350,7 +372,8 @@ input {
   gap: 10px;
   padding: 0 14px;
   background: var(--panel);
-  box-shadow: inset 0 1px 0 #ffffff12;
+  border-top: 1px solid #555;
+  box-shadow: inset 0 2px 0 #242424;
 }
 
 .bar-gap {
@@ -364,8 +387,9 @@ input {
 }
 
 .stepper-label {
+  font-family: 'Neodgm', 'Pretendard', sans-serif;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--fg2);
 }
 
@@ -374,8 +398,10 @@ input {
   align-items: center;
   height: 32px;
   padding: 0 2px;
-  border-radius: 9px;
+  border: 1px solid var(--edge);
+  border-radius: 4px;
   background: var(--sunk);
+  box-shadow: 2px 2px 0 var(--pixel-shadow);
   transition:
     transform var(--dur) var(--ease),
     box-shadow var(--dur) var(--ease);
@@ -389,7 +415,7 @@ input {
 .stepper-arrow {
   width: 24px;
   height: 28px;
-  border-radius: 7px;
+  border-radius: 2px;
   display: grid;
   place-items: center;
   color: var(--fg2);
@@ -416,18 +442,22 @@ input {
   min-width: 38px;
   padding: 0 2px;
   text-align: center;
-  font-size: 12.5px;
-  font-weight: 700;
+  font-family: 'Neodgm', 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
 }
 
 .btn {
   height: 32px;
   padding: 0 14px;
-  border-radius: 9px;
+  border: 1px solid var(--edge);
+  border-radius: 4px;
   background: var(--sunk);
-  font-size: 12.5px;
-  font-weight: 600;
+  box-shadow: 2px 2px 0 var(--pixel-shadow);
+  font-family: 'Neodgm', 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
   transition:
     background var(--dur) var(--ease),
     transform var(--dur) var(--ease),
@@ -444,7 +474,8 @@ input {
 }
 
 .btn:active:not(:disabled) {
-  transform: scale(0.97);
+  transform: translate(2px, 2px);
+  box-shadow: none;
 }
 
 .btn-icon {
@@ -455,6 +486,7 @@ input {
 }
 
 .btn-primary {
+  border-color: var(--accent-hi);
   background: var(--accent);
   color: var(--on-accent);
 }
@@ -487,8 +519,9 @@ input {
   align-items: center;
   gap: 7px;
   padding: 0 2px;
-  font-size: 11.5px;
-  font-weight: 600;
+  font-family: 'Neodgm', 'Pretendard', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--fg2);
   font-variant-numeric: tabular-nums;
 }
@@ -496,7 +529,7 @@ input {
 .status-dot {
   width: 7px;
   height: 7px;
-  border-radius: 50%;
+  border-radius: 1px;
   background: #6e6e6e;
   transition: background var(--dur) var(--ease);
 }
