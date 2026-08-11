@@ -13,8 +13,7 @@ import iconv from 'iconv-lite'
 import type { Period, Settings, TimetableData } from '../../shared/types'
 
 export const BASE = 'http://comci.net:4082'
-/** 베타 테스트용 임시 학교. */
-export const SCHOOL_NAME = '인천여자고등학교'
+export const SCHOOL_NAME = '인천과학고등학교'
 const TIMEOUT_MS = 10_000
 const HEADERS = { 'User-Agent': 'Mozilla/5.0' }
 

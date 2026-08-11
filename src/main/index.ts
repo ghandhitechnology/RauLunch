@@ -127,8 +127,7 @@ function trayLine(status: StatusSnapshot): string {
 const schoolCodeStore: SchoolCodeStore = {
   read(): SchoolCode | null {
     try {
-      // 베타 급식 학교가 기존 인천과학고 캐시를 재사용하지 않도록 파일을 분리한다.
-      const file = join(getPaths().dir, 'school-beta-incheon-girls.json')
+      const file = join(getPaths().dir, 'school.json')
       if (!existsSync(file)) return null
       const raw: unknown = JSON.parse(readFileSync(file, 'utf8'))
       if (typeof raw !== 'object' || raw === null) return null
@@ -142,11 +141,7 @@ const schoolCodeStore: SchoolCodeStore = {
   write(value: SchoolCode): void {
     try {
       ensureAppDir()
-      writeFileSync(
-        join(getPaths().dir, 'school-beta-incheon-girls.json'),
-        JSON.stringify(value),
-        'utf8',
-      )
+      writeFileSync(join(getPaths().dir, 'school.json'), JSON.stringify(value), 'utf8')
     } catch (e) {
       log(`학교코드 저장 실패 — ${String(e)}`)
     }
@@ -159,7 +154,7 @@ const schoolCodeStore: SchoolCodeStore = {
  */
 function readComciCode(): number | null {
   try {
-    const file = join(getPaths().dir, 'comci-beta-incheon-girls.json')
+    const file = join(getPaths().dir, 'comci.json')
     if (!existsSync(file)) return null
     const raw: unknown = JSON.parse(readFileSync(file, 'utf8'))
     if (typeof raw !== 'object' || raw === null) return null
@@ -174,11 +169,7 @@ function writeComciCode(schoolCode: number): void {
   if (!Number.isFinite(schoolCode) || readComciCode() === schoolCode) return
   try {
     ensureAppDir()
-    writeFileSync(
-      join(getPaths().dir, 'comci-beta-incheon-girls.json'),
-      JSON.stringify({ schoolCode }),
-      'utf8',
-    )
+    writeFileSync(join(getPaths().dir, 'comci.json'), JSON.stringify({ schoolCode }), 'utf8')
   } catch (e) {
     log(`컴시간 학교코드 저장 실패 — ${String(e)}`)
   }
