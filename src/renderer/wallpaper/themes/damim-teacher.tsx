@@ -8,6 +8,7 @@ import type {
 } from '../../../shared/theme'
 import { getThemeMeta } from '../../../shared/themeCatalog'
 import { MEAL_KEYS, MEAL_LABELS } from '../../../shared/types'
+import { fitRem, useFitToSlot } from '../fitToSlot'
 import teacherUrl from './assets/damim-teacher.jpg'
 
 const BLACK = '#000000'
@@ -104,37 +105,58 @@ function SectionTitle({ children }: { children: ReactNode }) {
 }
 
 function MealPanel({ meals, empty }: MealPanelProps) {
+  // 메뉴가 많은 날은 제목 아래 남은 높이에 맞춰 본문만 줄인다. 제목은 그대로 둬야
+  // 옆 칼럼 제목과 크기가 맞는다.
+  const { boxRef, contentRef } = useFitToSlot()
+
   return (
-    <div style={{ ...PIXEL, height: '100%', paddingRight: '34rem' }}>
+    <div
+      style={{
+        ...PIXEL,
+        height: '100%',
+        paddingRight: '34rem',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <SectionTitle>오늘의 급식</SectionTitle>
-      {empty ? (
-        <div style={{ fontSize: '36rem', color: DIM }}>NO MENU DATA</div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '18rem' }}>
-          {MEAL_KEYS.map((key) => {
-            const items = meals[key] ?? []
-            return (
-              <div key={key} style={{ display: 'grid', gridTemplateColumns: '80rem 1fr', gap: '14rem' }}>
-                <span
+      <div ref={boxRef} style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+        <div ref={contentRef} style={{ display: 'flex', flexDirection: 'column', gap: fitRem(18) }}>
+          {empty ? (
+            <div style={{ fontSize: fitRem(36), color: DIM }}>NO MENU DATA</div>
+          ) : (
+            MEAL_KEYS.map((key) => {
+              const items = meals[key] ?? []
+              return (
+                <div
+                  key={key}
                   style={{
-                    alignSelf: 'start',
-                    padding: '7rem 8rem',
-                    border: `4rem solid ${WHITE}`,
-                    fontSize: '30rem',
-                    lineHeight: 1,
-                    textAlign: 'center',
+                    display: 'grid',
+                    gridTemplateColumns: `${fitRem(80)} 1fr`,
+                    gap: fitRem(14),
                   }}
                 >
-                  {MEAL_LABELS[key]}
-                </span>
-                <span style={{ fontSize: '35rem', lineHeight: 1.32, wordBreak: 'keep-all' }}>
-                  {items.length ? items.join(' · ') : '---'}
-                </span>
-              </div>
-            )
-          })}
+                  <span
+                    style={{
+                      alignSelf: 'start',
+                      padding: `${fitRem(7)} ${fitRem(8)}`,
+                      border: `${fitRem(4)} solid ${WHITE}`,
+                      fontSize: fitRem(30),
+                      lineHeight: 1,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {MEAL_LABELS[key]}
+                  </span>
+                  <span style={{ fontSize: fitRem(35), lineHeight: 1.32, wordBreak: 'keep-all' }}>
+                    {items.length ? items.join(' · ') : '---'}
+                  </span>
+                </div>
+              )
+            })
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }
