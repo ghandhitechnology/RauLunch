@@ -111,13 +111,6 @@ export function toYmd(isoDate: string): string {
   return isoDate.replace(/-/g, '')
 }
 
-/** "2026-06-13" 을 하루 단위로 민다. UTC 로 계산해 서머타임·시간대에 흔들리지 않게 한다. */
-export function shiftIsoDate(isoDate: string, days: number): string {
-  const [y, m, d] = isoDate.split('-').map(Number)
-  const at = new Date(Date.UTC(y, m - 1, d + days))
-  return at.toISOString().slice(0, 10)
-}
-
 /** 로컬 오늘 날짜를 "YYYY-MM-DD" 로. toISOString 은 UTC 라 못 쓴다. */
 export function todayIsoDate(now = new Date()): string {
   const pad = (n: number) => String(n).padStart(2, '0')
@@ -145,6 +138,32 @@ function describeNeisResult(json: Record<string, unknown>): string {
   const result = json.RESULT
   if (!isRecord(result)) return '알 수 없는 응답'
   return `${result.CODE ?? '?'} ${result.MESSAGE ?? ''}`.trim()
+}
+
+/** head[0].list_total_count. 응답에 없으면 null. */
+function listTotal(json: unknown, key: string): number | null {
+  if (!isRecord(json)) return null
+  const block = json[key]
+  if (!Array.isArray(block) || !isRecord(block[0])) return null
+  const head = block[0].head
+  if (!Array.isArray(head) || !isRecord(head[0])) return null
+  const total = head[0].list_total_count
+  return typeof total === 'number' && Number.isFinite(total) ? total : null
+}
+
+/**
+ * 응답이 잘렸는지 본다.
+ *
+ * NEIS 는 인증키 없이 호출하면 한 번에 5행까지만 주고 pIndex·pSize 를 무시한다.
+ * 잘린 응답은 '그날 급식이 없다' 와 구별되지 않으므로, 총 건수보다 적게 오면 버린다.
+ * 버리지 않으면 반쪽 급식이 성공으로 처리돼 캐시에까지 남는다.
+ */
+export function assertComplete(json: unknown, key: string): void {
+  if (!isRecord(json) || !(key in json)) return // INFO-200: 조회 결과 없음
+  const total = listTotal(json, key)
+  if (total === null) return
+  const received = extractRows(json, key).length
+  if (received < total) throw new Error(`${key} 응답이 잘렸다 (${received}/${total}행)`)
 }
 
 // ---------------------------------------------------------------- 네트워크
@@ -188,6 +207,7 @@ async function queryMeals(
     }),
     fetchImpl,
   )
+  assertComplete(json, 'mealServiceDietInfo')
   return parseMealRows(json)
 }
 
@@ -203,7 +223,7 @@ export interface FetchMealOptions {
 }
 
 /**
- * 당일 조회 → 주간 조회 순으로 시도한다. 둘 다 실패하면 던진다.
+ * 당일 조회 → 범위 조회 순으로 시도한다. 둘 다 실패하면 던진다.
  *
  * 조회는 됐는데 그날 급식이 없는 경우(방학·주말)는 실패가 아니다 —
  * 빈 MealData 를 그대로 돌려줘 다음 단계로 넘어가지 않는다. 원본과 같은 판단이다.
@@ -223,21 +243,22 @@ export async function fetchMeal(options: FetchMealOptions): Promise<MealData> {
   // 1차: 당일 조회. 응답이 작아 가장 빠르다.
   try {
     const meals = await queryMeals(school, { MLSV_YMD: ymd }, fetchImpl)
-    return toMealData(date, meals[ymd])
+    if (meals[ymd]) return toMealData(date, meals[ymd])
+    log('급식: 당일 조회가 비어 있어 범위 조회 시도')
   } catch (error) {
-    log(`급식: 당일 조회 실패 (${describeError(error)}), 주간 조회 시도`)
+    log(`급식: 당일 조회 실패 (${describeError(error)}), 범위 조회 시도`)
   }
 
-  // 2차: 앞뒤 3일 범위 조회. 당일 조회만 간헐적으로 비는 일이 있어 넓게 긁어 그날치를 골라낸다.
+  // 2차: 같은 날을 범위 파라미터로 다시 묻는다. 당일 조회만 간헐적으로 비는 일이 있어
+  // 경로를 바꿔 한 번 더 확인한다. 범위를 하루로 묶는 이유는 NEIS 가 인증키 없이 5행에서
+  // 응답을 자르기 때문이다 — 넓게 긁으면 오늘 점심·저녁이 잘려 나간 채로 성공이 된다.
   try {
-    const from = toYmd(shiftIsoDate(date, -3))
-    const to = toYmd(shiftIsoDate(date, 3))
-    const meals = await queryMeals(school, { MLSV_FROM_YMD: from, MLSV_TO_YMD: to }, fetchImpl)
+    const meals = await queryMeals(school, { MLSV_FROM_YMD: ymd, MLSV_TO_YMD: ymd }, fetchImpl)
     return toMealData(date, meals[ymd])
   } catch (error) {
     const detail = describeError(error)
-    log(`급식: 주간 조회도 실패 (${detail}), 캐시 사용`)
-    throw new Error(`급식: 당일·주간 조회 모두 실패 (${detail})`)
+    log(`급식: 범위 조회도 실패 (${detail}), 캐시 사용`)
+    throw new Error(`급식: 당일·범위 조회 모두 실패 (${detail})`)
   }
 }
 
