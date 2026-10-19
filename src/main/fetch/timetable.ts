@@ -104,6 +104,18 @@ export function parseSchoolSearch(text: string, name: string): number {
 }
 
 /**
+ * 교시 칸의 수업 코드. 변경·이동 수업은 '>44024' 처럼 문자열로 내려오고,
+ * 수업이 없는 칸은 0 이다. 문자열을 그냥 비우면 그 교시가 사라지고,
+ * 뒤쪽에 몰려 있으면 그날 시간표가 통째로 빈다.
+ */
+function periodCode(value: unknown): number {
+  if (typeof value === 'number') return value
+  if (typeof value !== 'string') return 0
+  const digits = value.trim().replace(/^>/, '')
+  return /^\d+$/.test(digits) ? Number(digits) : 0
+}
+
+/**
  * 주간 자료를 [월..금][교시] 형태로 푼다.
  *
  * 자료[학년][반][요일(1=월..5=금)] 의 0번째가 그날 교시 수, 1번 이후가 교시별 코드다.
@@ -133,12 +145,13 @@ export function decodeWeek(raw: any, boot: Bootstrap, grade: number, classNo: nu
     const periods: Period[] = []
     row.slice(1, count + 1).forEach((x, idx) => {
       const period = idx + 1
-      if (typeof x !== 'number' || x === 0) {
+      const code = periodCode(x)
+      if (code === 0) {
         periods.push({ period, time: timeAt(period), subject: '', teacher: '' })
         return
       }
-      const s = Math.floor(x / 1000)
-      const th = x % 1000
+      const s = Math.floor(code / 1000)
+      const th = code % 1000
       periods.push({
         period,
         time: timeAt(period),

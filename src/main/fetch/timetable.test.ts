@@ -56,7 +56,8 @@ const classRow: unknown[] = [
 const table: unknown[] = []
 table[1] = [null, classRow]
 const raw = { 자료492: subjects, 자료446: teachers, 자료147: table }
-const week = decodeWeek(raw, boot, 1, 1)
+type Row = { period: number; subject: string; teacher: string }
+const week: Row[][] = decodeWeek(raw, boot, 1, 1)
 
 // 월요일: 2교시가 문자열 코드 하나뿐이므로 사라지면 안 된다.
 assert.deepEqual(
