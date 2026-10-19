@@ -7,6 +7,7 @@ import {
   VALID_REFRESH_INTERVALS,
   type Settings,
 } from '../../shared/types'
+import { ddayLabel, localToday } from '../../shared/dday'
 import { Close } from './Glyphs'
 import { useOverlay } from './hooks'
 import { Stepper } from './Stepper'
@@ -188,6 +189,19 @@ export function SettingsView({ settings, onPatch, onClose }: SettingsViewProps) 
             />
             <span className="slider-value">{Math.round(settings.iconSafeRatio * 100)}%</span>
           </div>
+        </Row>
+        <Row label="디데이">
+          <input
+            type="date"
+            className="date-input"
+            value={settings.ddayDate}
+            onChange={(e) => onPatch({ ddayDate: e.target.value })}
+            aria-label="디데이 기준일"
+            data-stop
+          />
+          <span className="date-hint">
+            {ddayLabel(settings.ddayDate, localToday()) || '표시 안 함'}
+          </span>
         </Row>
         <Row label="수동 시간표 우선">
           <Toggle

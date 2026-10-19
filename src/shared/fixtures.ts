@@ -11,6 +11,7 @@ export const SAMPLE_DATA: WallpaperData = {
   weekdayLabel: '수',
   grade: 1,
   classNo: 3,
+  dday: 'D-12',
   meal: {
     date: '2026-06-13',
     meals: {
