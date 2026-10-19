@@ -1,6 +1,6 @@
 {
   "name": "geupsik-controller",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "급식 컨트롤러 — 인천과학고 급식·시간표 바탕화면 컨트롤러",
   "main": "./out/main/index.js",
   "author": "Taewook Ha",
