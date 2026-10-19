@@ -60,9 +60,8 @@
       ]
     },
     "nsis": {
-      "oneClick": false,
+      "oneClick": true,
       "perMachine": false,
-      "allowToChangeInstallationDirectory": true,
       "artifactName": "급식컨트롤러-설치-${version}.${ext}",
       "shortcutName": "급식 컨트롤러"
     },

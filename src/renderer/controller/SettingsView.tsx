@@ -1,4 +1,4 @@
-import { useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 
 import {
   REFRESH_INTERVAL_LABELS,
@@ -72,7 +72,12 @@ export function SettingsView({ settings, onPatch, onClose }: SettingsViewProps) 
   const [day, setDay] = useState(WEEKDAYS[0])
   // 실행 중 업데이트나 예전 main 프로세스가 넘긴 설정에는 이 키가 없을 수 있다.
   const teacherNames = settings.teacherNames ?? []
+  const savedKey = teacherNames.join('\u0000')
   const [teacherDraft, setTeacherDraft] = useState(teacherNames.join('\n'))
+
+  useEffect(() => {
+    setTeacherDraft(teacherNames.join('\n'))
+  }, [savedKey])
 
   const manual = settings.manualTimetable[day] ?? []
 
@@ -84,16 +89,24 @@ export function SettingsView({ settings, onPatch, onClose }: SettingsViewProps) 
     onPatch({ manualTimetable: { ...settings.manualTimetable, [day]: trimmed } })
   }
 
-  const saveTeacherNames = () => {
-    const teacherNames = teacherDraft
+  const parseTeacherDraft = (): string[] => {
+    const parsed = teacherDraft
       .split(/[\n,]/)
       .map((name) => name.trim())
       .filter(Boolean)
-    const unique = [...new Set(teacherNames)]
-    if (unique.join('\u0000') !== teacherNames.join('\u0000')) {
-      onPatch({ teacherNames: unique })
-    }
+    return [...new Set(parsed)]
   }
+
+  const saveTeacherNames = () => {
+    const unique = parseTeacherDraft()
+    if (unique.join('\u0000') !== savedKey) {
+      onPatch({ teacherNames: unique })
+      return true
+    }
+    return false
+  }
+
+  const teacherDirty = parseTeacherDraft().join('\u0000') !== savedKey
 
   const closeSettings = () => {
     saveTeacherNames()
@@ -185,16 +198,29 @@ export function SettingsView({ settings, onPatch, onClose }: SettingsViewProps) 
         </Row>
 
         <section className="teacher-editor">
-          <label htmlFor="teacher-names">교사 이름</label>
+          <div className="teacher-head">
+            <label htmlFor="teacher-names">교사 이름</label>
+            <button
+              className="btn btn-primary teacher-save"
+              onClick={() => saveTeacherNames()}
+              disabled={!teacherDirty}
+              data-stop
+            >
+              저장
+            </button>
+          </div>
           <textarea
             id="teacher-names"
             value={teacherDraft}
             onChange={(e) => setTeacherDraft(e.target.value)}
-            onBlur={saveTeacherNames}
+            onBlur={() => saveTeacherNames()}
             placeholder={'김완수\n이민지'}
             spellCheck={false}
             data-stop
           />
+          {teacherDirty ? (
+            <span className="teacher-hint">저장하지 않은 변경이 있습니다</span>
+          ) : null}
         </section>
 
         <section className="editor">

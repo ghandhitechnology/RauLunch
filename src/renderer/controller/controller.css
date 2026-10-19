@@ -691,6 +691,27 @@ input {
   font-size: 13px;
 }
 
+.teacher-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.teacher-save {
+  height: 28px;
+  padding: 0 16px;
+  font-size: 12px;
+}
+
+.teacher-save:disabled {
+  opacity: 0.45;
+}
+
+.teacher-hint {
+  font-size: 11px;
+  color: var(--fg2);
+}
+
 .teacher-editor textarea {
   height: 64px;
   min-height: 64px;

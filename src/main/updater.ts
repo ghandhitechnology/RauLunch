@@ -11,8 +11,13 @@ const CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000
  * 개발 빌드와 portable 빌드는 electron-updater의 설치 대상이 아니므로 건너뛴다.
  * NSIS 설치본은 업데이트를 백그라운드로 내려받고, 사용자가 재시작을 승인하면 적용한다.
  */
+function isPortableBuild(): boolean {
+  if (Boolean(process.env.PORTABLE_EXECUTABLE_DIR)) return true
+  return process.argv.some((arg) => arg === '--portable' || arg.startsWith('--portable='))
+}
+
 export function startAutoUpdater(): void {
-  if (process.platform !== 'win32' || !app.isPackaged) return
+  if (process.platform !== 'win32' || !app.isPackaged || isPortableBuild()) return
 
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = true
@@ -44,7 +49,7 @@ export function startAutoUpdater(): void {
         noLink: true,
       })
       .then(({ response }) => {
-        if (response === 0) autoUpdater.quitAndInstall(false, true)
+        if (response === 0) autoUpdater.quitAndInstall(true, true)
       })
       .catch((error: unknown) => log(`업데이트 알림 표시 실패 — ${String(error)}`, 'error'))
   })
