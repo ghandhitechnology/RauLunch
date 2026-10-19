@@ -9,6 +9,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 
+import { isIsoDate } from '../shared/dday'
 import {
   DEFAULT_SETTINGS,
   DEFAULT_THEME,
@@ -215,6 +216,8 @@ export function sanitizeSettings(raw: unknown): Settings {
         ? src.preferManualTimetable
         : DEFAULT_SETTINGS.preferManualTimetable,
     teacherNames: sanitizeTeacherNames(src.teacherNames),
+    // 잘못된 날짜는 조용히 지운다. 남겨두면 화면에 엉뚱한 D-42 가 뜬다.
+    ddayDate: typeof src.ddayDate === 'string' && isIsoDate(src.ddayDate) ? src.ddayDate : '',
   }
 }
 

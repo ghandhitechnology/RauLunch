@@ -63,6 +63,8 @@ export interface WallpaperData {
   classNo: number
   meal: MealData
   timetable: TimetableData
+  /** 기준일까지 남은 날. "D-12" · "D-DAY" · "D+3". 설정이 비어 있으면 없다. */
+  dday?: string
 }
 
 export interface Settings {
@@ -84,6 +86,8 @@ export interface Settings {
   preferManualTimetable: boolean
   /** 컴시간의 마스킹된 교사명을 완성하는 데 사용할 전체 이름 목록. */
   teacherNames: string[]
+  /** 디데이 기준일 "YYYY-MM-DD". 이 날이 D-DAY 다. 빈 문자열이면 표시하지 않는다. */
+  ddayDate: string
 }
 
 export const VALID_GRADES = [1, 2, 3] as const
@@ -107,6 +111,7 @@ export const DEFAULT_SETTINGS: Settings = {
   manualTimetable: {},
   preferManualTimetable: false,
   teacherNames: [],
+  ddayDate: '',
 }
 
 /** 마지막 갱신 시도 결과. 컨트롤러 사이드바가 이걸 그대로 보여준다. */

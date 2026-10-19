@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 import type {
+  CornerProps,
   HeaderProps,
   MealPanelProps,
   ThemeSkin,
@@ -186,6 +187,32 @@ function TimetablePanel({ periods, weekdayLabel, empty }: TimetablePanelProps) {
   )
 }
 
+/**
+ * 상자 오른쪽 아래 빈 자리의 디데이. 두 칸짜리 격자 아래, 캐릭터 위가 비어 있다.
+ * 그 자리를 채우는 유일한 요소이므로 테마에서 가장 큰 글자 크기를 쓴다.
+ */
+function Corner({ label }: CornerProps) {
+  return (
+    <div
+      style={{
+        ...PIXEL,
+        fontSize: '200rem',
+        lineHeight: 0.85,
+        letterSpacing: '-6rem',
+        textAlign: 'right',
+        whiteSpace: 'nowrap',
+        // 글자 뒤로 칼럼 구분선이 지나간다. 바탕색으로 끊어 주지 않으면
+        // 글자 아래로 선 토막이 남아 그어진 것처럼 보인다.
+        background: BLACK,
+        padding: '0 22rem 20rem',
+        marginBottom: '-20rem',
+      }}
+    >
+      {label}
+    </div>
+  )
+}
+
 const meta = getThemeMeta('pixel-speech')
 
 const pixelSpeech: ThemeSkin = {
@@ -208,6 +235,7 @@ const pixelSpeech: ThemeSkin = {
   Header,
   MealPanel,
   TimetablePanel,
+  Corner,
 }
 
 export default pixelSpeech

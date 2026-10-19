@@ -45,6 +45,12 @@ export interface TimetablePanelProps {
   empty: boolean
 }
 
+/** 바탕화면 오른쪽 아래 빈 자리에 놓이는 큰 글씨. */
+export interface CornerProps {
+  /** "D-12" · "D-DAY" · "D+3". */
+  label: string
+}
+
 export interface HeaderProps {
   /** "6월 13일" */
   dateLabel: string
@@ -90,6 +96,8 @@ export interface ThemeSkin {
   Header: (props: HeaderProps) => ReactNode
   MealPanel: (props: MealPanelProps) => ReactNode
   TimetablePanel: (props: TimetablePanelProps) => ReactNode
+  /** 상자 오른쪽 아래 여백의 디데이. label 이 비면 프레임이 아예 그리지 않는다. */
+  Corner: (props: CornerProps) => ReactNode
 }
 
 /** 테마 구현 파일이 default export 하는 것. */
@@ -122,6 +130,7 @@ export function toPanelProps(data: WallpaperData): {
   header: HeaderProps
   meal: MealPanelProps
   timetable: TimetablePanelProps
+  corner: CornerProps
 } {
   const [, month, day] = data.date.split('-')
   const meals = data.meal.meals
@@ -145,5 +154,6 @@ export function toPanelProps(data: WallpaperData): {
       weekdayLabel: data.timetable.weekdayLabel,
       empty: data.timetable.periods.length === 0,
     },
+    corner: { label: data.dday ?? '' },
   }
 }

@@ -23,6 +23,7 @@ import {
   writeMealCache,
   writeTimetableCache,
 } from './config'
+import { ddayLabel } from '../shared/dday'
 import { log } from './logger'
 import { fetchMeal, type SchoolCode, type SchoolCodeStore } from './fetch/meal'
 import {
@@ -237,6 +238,7 @@ async function runRefresh(): Promise<boolean | null> {
     classNo: settings.classNo,
     meal,
     timetable,
+    dday: ddayLabel(settings.ddayDate, date),
   }
 
   // 둘 다 실패했을 때만 실패로 친다. 하나라도 새로 받았으면 바탕화면은 갱신할 값어치가 있다.
@@ -262,6 +264,8 @@ async function applyCurrentWallpaper(): Promise<{ ok: boolean; detail: string }>
     const wallpaperData: WallpaperData = {
       ...data,
       timetable: resolveTimetableTeacherNames(data.timetable, settings.teacherNames ?? []),
+      // 기준일을 바꾸면 다시 받아오지 않고 여기서 바로 다시 센다.
+      dday: ddayLabel(settings.ddayDate, data.date),
     }
     const shot = await captureWallpaper({
       theme: settings.theme,
@@ -401,6 +405,7 @@ async function applySettingsPatch(patch: Partial<Settings>): Promise<AppState> {
   const needsRedraw =
     settings.theme !== before.theme ||
     settings.iconSafeRatio !== before.iconSafeRatio ||
+    settings.ddayDate !== before.ddayDate ||
     (settings.teacherNames ?? []).join('\u0000') !== (before.teacherNames ?? []).join('\u0000')
   if (data) data = { ...data, grade: settings.grade, classNo: settings.classNo }
   publish()

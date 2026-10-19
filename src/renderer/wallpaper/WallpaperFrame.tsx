@@ -44,7 +44,7 @@ export function WallpaperFrame({
     paddingRight: skin.geometry?.paddingRight ?? basePadding,
     paddingBottom: skin.geometry?.paddingBottom ?? basePadding,
   }
-  const { header, meal, timetable } = toPanelProps(data)
+  const { header, meal, timetable, corner } = toPanelProps(data)
 
   // 1920 기준으로 짠 디자인을 실제 크기에 맞춘다. 세로가 더 빡빡한 화면(4:3
   // 프로젝터 등)에서 글자가 넘치지 않도록 두 축 중 작은 배율을 쓴다.
@@ -105,6 +105,19 @@ export function WallpaperFrame({
           </div>
         </div>
       </skin.Ground>
+      {corner.label ? (
+        <div
+          style={{
+            position: 'absolute',
+            right: geo.paddingRight * scale,
+            bottom: geo.paddingBottom * scale,
+            // 테마 장식(캐릭터)보다 위. 큰 글씨가 구분선을 끊고 앉는다.
+            zIndex: 3,
+          }}
+        >
+          <skin.Corner {...corner} />
+        </div>
+      ) : null}
     </div>
   )
 }
