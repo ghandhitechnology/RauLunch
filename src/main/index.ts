@@ -30,6 +30,7 @@ import {
   fetchTimetable,
   resolveTimetableTeacherNames,
 } from './fetch/timetable'
+import { readPreviewPort, startPreview, type PreviewServer } from './preview'
 import { Scheduler } from './scheduler'
 import { applyWallpaper } from './wallpaper'
 import { apply as applyAutostart, isEnabled as isAutostartEnabled } from './autostart'
@@ -85,6 +86,8 @@ let partialError: string | null = null
 let applyError: string | null = null
 
 let controllerWindow: BrowserWindow | null = null
+/** 테마 확인용 실행에서 렌더를 브라우저 탭으로 내보내는 서버. 없으면 OS 바탕화면에 적용한다. */
+let preview: PreviewServer | null = null
 let tray: TrayController | null = null
 let scheduler: Scheduler | null = null
 /** 트레이의 '종료' 를 거쳤는지. 이게 false 면 창을 닫아도 앱은 안 죽는다. */
@@ -266,6 +269,14 @@ async function applyCurrentWallpaper(): Promise<{ ok: boolean; detail: string }>
       iconSafeRatio: settings.iconSafeRatio,
       outPath: getPaths().wallpaper,
     })
+    if (preview) {
+      preview.publish(shot.path)
+      applyError = null
+      log(`바탕화면 대신 미리보기로 내보냄 — ${preview.url}`)
+      publish()
+      return { ok: true, detail: `미리보기 탭 ${preview.url}` }
+    }
+
     const result = await applyWallpaper(shot.path)
     if (result.ok) {
       applyError = null
@@ -427,13 +438,22 @@ if (!app.requestSingleInstanceLock()) {
   void app.whenReady().then(async () => {
     settings = loadSettings()
 
+    // 테마를 확인하는 실행에서는 바탕화면도, 로그인 항목도 건드리지 않는다.
+    const previewPort = readPreviewPort()
+    if (previewPort !== null) {
+      preview = startPreview(previewPort)
+      if (preview) log(`미리보기 모드 — 바탕화면 대신 ${preview.url} 로 내보낸다`)
+    }
+
     // 설정 파일과 OS 등록 상태가 어긋나 있으면 설정 쪽을 정답으로 삼는다.
-    try {
-      if ((await isAutostartEnabled()) !== settings.autostart) {
-        await applyAutostart(settings.autostart)
+    if (!preview) {
+      try {
+        if ((await isAutostartEnabled()) !== settings.autostart) {
+          await applyAutostart(settings.autostart)
+        }
+      } catch (e) {
+        log(`자동 실행 상태 확인 실패 — ${String(e)}`)
       }
-    } catch (e) {
-      log(`자동 실행 상태 확인 실패 — ${String(e)}`)
     }
 
     registerIpc({
@@ -490,6 +510,7 @@ if (!app.requestSingleInstanceLock()) {
   app.on('before-quit', () => {
     quitting = true
     scheduler?.stop()
+    preview?.close()
     tray?.destroy()
     destroyCaptureWindow()
   })

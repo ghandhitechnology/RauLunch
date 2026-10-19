@@ -66,6 +66,7 @@
 | `src/main/logger.ts` | 크기 제한이 걸린 로그 파일 |
 | `src/main/scheduler.ts` | 자동 갱신 판단(순수 함수 `decide`)과 tick 루프 |
 | `src/main/capture.ts` | 숨은 창에 바탕화면을 그려 PNG로 찍어낸다 |
+| `src/main/preview.ts` | 미리보기 모드에서 렌더를 브라우저 탭으로 내보내는 로컬 서버 |
 | `src/main/wallpaper.ts` | Windows/macOS 바탕화면 적용 |
 | `src/main/autostart.ts` | Windows Run 키 / macOS LaunchAgent 등록 |
 | `src/main/tray.ts` | 트레이 아이콘과 메뉴 |
@@ -96,6 +97,15 @@ npm run build      # typecheck 후 out/ 에 번들
 
 `electron-vite dev` 로 띄운 뒤 브라우저로 `/wallpaper.html` 을 직접 열면 표본 자료로
 바탕화면 한 장이 그려진다. 쿼리 없이 열었을 때만 표본을 쓰므로 테마 작업에 편하다.
+
+실제 자료로 테마를 볼 때는 미리보기 모드로 띄운다. 바탕화면 대신 브라우저 탭으로 렌더가 간다.
+
+```bash
+GEUPSIK_PREVIEW=4319 npm run dev
+```
+
+`http://127.0.0.1:4319/` 를 열어 두면 갱신될 때마다 탭이 스스로 새 그림으로 바뀐다.
+이 모드에서는 바탕화면 적용도, 로그인 항목 등록도 하지 않는다.
 
 ## 빌드 (Windows)
 
