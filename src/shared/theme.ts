@@ -109,6 +109,14 @@ export const DEFAULT_GEOMETRY: Required<SlotGeometry> = {
 export const DESIGN_WIDTH = 1920
 export const DESIGN_HEIGHT = 1080
 
+/**
+ * 교사 이름 뒤에 붙는 표식. 시간표에서 T 는 담당 교사를 뜻한다.
+ * 이름이 비어 있는 칸(수동 시간표)에는 붙이지 않는다.
+ */
+function teacherMark(name: string): string {
+  return name ? `${name}T` : ''
+}
+
 /** WallpaperData → 각 패널이 받는 props 로 쪼개는 헬퍼. */
 export function toPanelProps(data: WallpaperData): {
   header: HeaderProps
@@ -130,7 +138,10 @@ export function toPanelProps(data: WallpaperData): {
     },
     meal: { meals, empty: mealEmpty },
     timetable: {
-      periods: data.timetable.periods,
+      periods: data.timetable.periods.map((period) => ({
+        ...period,
+        teacher: teacherMark(period.teacher),
+      })),
       weekdayLabel: data.timetable.weekdayLabel,
       empty: data.timetable.periods.length === 0,
     },
