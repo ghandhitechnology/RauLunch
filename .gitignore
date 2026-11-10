@@ -13,6 +13,10 @@ dist-electron/
 # Logs
 *.log
 npm-debug.log*
+logs/
+
+# Daily event background downloads (fetched by scripts/daily-event-bg.mjs)
+resources/events/
 
 # OS / editor
 .DS_Store

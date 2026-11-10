@@ -50,6 +50,10 @@
       {
         "from": "resources/icons",
         "to": "icons"
+      },
+      {
+        "from": "resources/events",
+        "to": "events"
       }
     ],
     "win": {
